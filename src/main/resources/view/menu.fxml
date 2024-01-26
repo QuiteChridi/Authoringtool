@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
-    <children>
-        <VBox alignment="CENTER" layoutX="100.0" layoutY="120.0" spacing="20.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0">
-            <children>
-                <Button mnemonicParsing="false" onMouseClicked="#buttonPressed" prefWidth="250.0" text="Das ist ein Button" textAlignment="CENTER" />
-            </children>
-        </VBox>
-        <Text fill="#005e69" layoutX="221.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hauptmenü"/>
-    </children>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.UserController">
+
+    <TableView fx:id="userTable" prefHeight="400.0" prefWidth="600.0">
+        <columns>
+            <TableColumn fx:id="userIdColumn" text="User ID" prefWidth="75.0"/>
+            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150.0"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="150.0"/>
+            <TableColumn fx:id="passwordColumn" text="Password" prefWidth="150.0"/>
+        </columns>
+    </TableView>
+
 </AnchorPane>
