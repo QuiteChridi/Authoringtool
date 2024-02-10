@@ -1,20 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.UserController">
-
-    <TableView fx:id="userTable" prefHeight="400.0" prefWidth="600.0">
-        <columns>
-            <TableColumn fx:id="userIdColumn" text="User ID" prefWidth="75.0"/>
-            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150.0"/>
-            <TableColumn fx:id="emailColumn" text="Email" prefWidth="150.0"/>
-            <TableColumn fx:id="passwordColumn" text="Password" prefWidth="150.0"/>
-        </columns>
-    </TableView>
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
+    <TabPane tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="User">
+                <content>
+                <VBox VBox.vgrow="ALWAYS">
+                    <TableView fx:id="userTable" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800" prefWidth="800">
+                        <columns>
+                            <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
+                            <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
+                            <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
+                            <TableColumn fx:id="passwordColumn" prefWidth="150.0" text="Password" />
+                        </columns>
+                    </TableView>
+                    <HBox spacing="10">
+                        <Button text="Edit" />
+                        <Button text="New" />
+                    </HBox>
+                </VBox>
+                </content>
+            </Tab>
+            <Tab text="Questions">
+                <content>
+                    <VBox minHeight="-Infinity" minWidth="-Infinity">
+                        <TableView fx:id="questionTable" prefHeight="-Infinity" prefWidth="-Infinity">
+                            <columns>
+                                <TableColumn fx:id="quizIdColumn" minWidth="75.0" prefWidth="75.0" text="Quiz ID" />
+                                <TableColumn fx:id="questionColumn" minWidth="300.0" prefWidth="300.0" text="Question" />
+                                <TableColumn fx:id="correctAnswerColumn" minWidth="150.0" prefWidth="150.0" text="Correct Answer" />
+                                <TableColumn fx:id="wrongAnswer1Column" minWidth="150.0" prefWidth="150.0" text="Wrong Answer 1" />
+                                <TableColumn fx:id="wrongAnswer2Column" minWidth="150.0" prefWidth="150.0" text="Wrong Answer 2" />
+                                <TableColumn fx:id="wrongAnswer3Column" minWidth="150.0" prefWidth="150.0" text="Wrong Answer 3" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </content>
+            </Tab>
+        </tabs>
+    </TabPane>
 
 </AnchorPane>
