@@ -12,8 +12,6 @@ public class Question {
 
     private String wrongAnswer2;
 
-
-
     private String wrongAnswer3;
 
     public Question(int quizId, String question, String correctAnswer, String wrongAnswer1, String wrongAnswer2, String wrongAnswer3){
