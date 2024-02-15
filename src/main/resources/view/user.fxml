@@ -32,11 +32,11 @@
          <Button mnemonicParsing="false" onMouseClicked="#newUser" text="New" GridPane.columnIndex="1" />
          <Button mnemonicParsing="false" onMouseClicked="#edit" text="Edit" GridPane.rowIndex="2" />
          <Button mnemonicParsing="false" onMouseClicked="#delete" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <Button mnemonicParsing="false" onMouseClicked="#save" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="saveBtn" visible="false"/>
+         <Button fx:id="saveBtn" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
          <VBox prefHeight="220.0" prefWidth="242.0" GridPane.rowIndex="1">
             <children>
-               <TextField fx:id="userID" editable="false" promptText="User ID">
+               <TextField fx:id="userID" editable="false" promptText="User ID" >
                   <VBox.margin>
                      <Insets bottom="30.0" top="30.0" />
                   </VBox.margin>

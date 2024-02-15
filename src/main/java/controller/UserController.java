@@ -44,6 +44,11 @@ public class UserController {
     @FXML
     public TextField userID;
 
+    User currentSelectedUser;
+
+    Connection connection = Database.getInstance().conn;
+
+
 
 
 
@@ -63,7 +68,7 @@ public class UserController {
         ObservableList<User> userData = FXCollections.observableArrayList();
 
         try {
-            Connection connection = Database.getInstance().conn;
+            connection= Database.getInstance().conn;
             String query = "SELECT * FROM user";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -99,11 +104,11 @@ public class UserController {
         userID.setStyle("-fx-text-fill: black");
         saveBtn.setVisible(false);
       try {
-          User currentSelected = userTable.getSelectionModel().getSelectedItem();
-          userID.setText(String.valueOf(currentSelected.getUserId()));
-          username.setText(currentSelected.getUsername());
-          email.setText(currentSelected.getEmail());
-          password.setText(currentSelected.getPassword());
+          currentSelectedUser = userTable.getSelectionModel().getSelectedItem();
+          userID.setText(String.valueOf(currentSelectedUser.getUserId()));
+          username.setText(currentSelectedUser.getUsername());
+          email.setText(currentSelectedUser.getEmail());
+          password.setText(currentSelectedUser.getPassword());
       }
       catch (RuntimeException v){
           userID.setText("No User Selected!");
@@ -113,12 +118,14 @@ public class UserController {
     }
     @FXML
     private void newUser(){
+        userTable.getSelectionModel().clearSelection();
         userID.setText("Entry Userdata");
         username.setText("");
         email.setText("");
         password.setText("");
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
+        saveBtn.setText("add");
     }
 
     @FXML
@@ -128,7 +135,12 @@ public class UserController {
     }
     @FXML
     private void save(){
-
+        if(currentSelectedUser!=null){
+            editUserInDb();
+        }
+       else{
+           createUser();
+        }
     }
 
     @FXML
@@ -136,5 +148,23 @@ public class UserController {
 
     }
 
+    private void createUser(){
+        String query= "INSERT INTO user (name, password, email) VALUES (?, ?, ?)";
+        try{PreparedStatement preparedStatement =connection.prepareStatement(query);
+            preparedStatement.setString(1,username.getText());
+            preparedStatement.setString(3,email.getText());
+            preparedStatement.setString(2,password.getText());
+            preparedStatement.executeUpdate();
+            userID.setText("Success User added");
+        }
+         catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void editUserInDb(){
+
+    }
 
 }
