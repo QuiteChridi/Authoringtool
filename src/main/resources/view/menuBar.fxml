@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+
+
+<MenuBar prefHeight="26.0" prefWidth="1038.0" fx:controller="controller.MenuBar" xmlns:fx="http://javafx.com/fxml/1">
+    <menus>
+        <Menu mnemonicParsing="false" onAction="#switchToUser" text="User">
+            <items>
+                <MenuItem mnemonicParsing="false" text="User"  fx:id="user" />
+            </items></Menu>
+        <Menu  mnemonicParsing="false" onAction="#switchToQuestion" text="Questions">
+            <items>
+                <MenuItem mnemonicParsing="false" text="Questions" fx:id="questions" />
+            </items></Menu>
+    </menus>
+</MenuBar>

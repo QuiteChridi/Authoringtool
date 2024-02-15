@@ -2,14 +2,12 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Database;
@@ -42,39 +40,6 @@ public class QuestionController {
 
     @FXML
     private TableColumn<Question, String> wrongAnswer3Column;
-
-    @FXML
-    private Button edit;
-    @FXML
-    private Button user;
-
-    @FXML
-    private void onEditButtonClick(){
-        try {
-            Stage stage = (Stage) edit.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/view/UserEditDialog.fxml"));
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add("/css/stylesheet.css");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void onUserButtonClick(){
-        try {
-            Stage stage = (Stage) user.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/view/user.fxml"));
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add("/css/stylesheet.css");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @FXML
@@ -110,8 +75,6 @@ public class QuestionController {
                     String wrongAnswer3 = resultSet.getString("wrongAnswer3");
 
                     Question results= new Question(quizId, question,correctAnswer,wrongAnswer1,wrongAnswer2,wrongAnswer3);
-                    System.out.println(results);
-
 
                     questionData.add(results);
                 }
