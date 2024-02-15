@@ -15,8 +15,8 @@ import java.sql.SQLException;
 
 public class UserController {
 
-
-
+    @FXML
+    public Button saveBtn;
     @FXML
     private TableView<User> userTable;
 
@@ -31,6 +31,20 @@ public class UserController {
 
     @FXML
     private TableColumn<User, String> passwordColumn;
+
+    @FXML
+    public TextField password;
+
+    @FXML
+    public TextField email;
+
+    @FXML
+    public TextField username;
+
+    @FXML
+    public TextField userID;
+
+
 
 
     @FXML
@@ -79,4 +93,48 @@ public class UserController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    @FXML
+    private void select(){
+        userID.setStyle("-fx-text-fill: black");
+        saveBtn.setVisible(false);
+      try {
+          User currentSelected = userTable.getSelectionModel().getSelectedItem();
+          userID.setText(String.valueOf(currentSelected.getUserId()));
+          username.setText(currentSelected.getUsername());
+          email.setText(currentSelected.getEmail());
+          password.setText(currentSelected.getPassword());
+      }
+      catch (RuntimeException v){
+          userID.setText("No User Selected!");
+          userID.setStyle("-fx-text-fill: red");
+          System.out.println("No User Selected");
+      }
+    }
+    @FXML
+    private void newUser(){
+        userID.setText("Entry Userdata");
+        username.setText("");
+        email.setText("");
+        password.setText("");
+        saveBtn.setVisible(true);
+        saveBtn.setStyle("-fx-text-fill: green");
+    }
+
+    @FXML
+    private void edit(){
+        saveBtn.setVisible(true);
+        saveBtn.setStyle("-fx-text-fill: green");
+    }
+    @FXML
+    private void save(){
+
+    }
+
+    @FXML
+    private void delete(){
+
+    }
+
+
 }

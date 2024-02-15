@@ -8,12 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 
-public class MenuBar {
+public class MenuBarController {
     @FXML
     private MenuItem user;
 
     @FXML
     private MenuItem questions;
+    @FXML
+    private MenuItem stats;
 
     @FXML
     private void switchToQuestion(ActionEvent event) throws Exception {
@@ -23,6 +25,11 @@ public class MenuBar {
     @FXML
     private void switchToUser() throws Exception {
         switchScene("/view/user.fxml", user);
+    }
+
+    @FXML
+    private void switchToStats() throws Exception {
+        switchScene("/view/stats.fxml", stats);
     }
 
     private void switchScene(String fxmlPath, MenuItem menu) {

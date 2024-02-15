@@ -2,15 +2,14 @@
 <?import javafx.scene.control.*?>
 
 
-<MenuBar prefHeight="26.0" prefWidth="1038.0" fx:controller="controller.MenuBar" xmlns:fx="http://javafx.com/fxml/1">
-    <menus>
-        <Menu mnemonicParsing="false" onAction="#switchToUser" text="User">
-            <items>
-                <MenuItem mnemonicParsing="false" text="User"  fx:id="user" />
-            </items></Menu>
-        <Menu  mnemonicParsing="false" onAction="#switchToQuestion" text="Questions">
-            <items>
-                <MenuItem mnemonicParsing="false" text="Questions" fx:id="questions" />
-            </items></Menu>
-    </menus>
+<MenuBar prefHeight="26.0" prefWidth="1038.0" fx:controller="controller.MenuBarController" xmlns:fx="http://javafx.com/fxml/1">
+    <Menu mnemonicParsing="false" onAction="#switchToUser" text="User">
+        <MenuItem mnemonicParsing="false" text="User" fx:id="user"/>
+    </Menu>
+    <Menu mnemonicParsing="false" onAction="#switchToQuestion" text="Questions">
+        <MenuItem mnemonicParsing="false" text="Question" fx:id="questions"/>
+    </Menu>
+    <Menu mnemonicParsing="false" onAction="#switchToStats" text="Stats">
+        <MenuItem mnemonicParsing="false" text="Stats" fx:id="stats"/>
+    </Menu>
 </MenuBar>
