@@ -68,7 +68,6 @@ public class UserController {
         ObservableList<User> userData = FXCollections.observableArrayList();
 
         try {
-            connection= Database.getInstance().conn;
             String query = "SELECT * FROM user";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -132,6 +131,7 @@ public class UserController {
     private void edit(){
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
+        saveBtn.setText("save");
     }
     @FXML
     private void save(){
@@ -145,17 +145,29 @@ public class UserController {
 
     @FXML
     private void delete(){
+        String query= "DELETE FROM user WHERE  iduser=?";
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, Integer.parseInt(userID.getText()));
+            preparedStatement.executeUpdate();
+            userID.setText("User deleted");
+            userID.setStyle("-fx-text-fill: red");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     private void createUser(){
         String query= "INSERT INTO user (name, password, email) VALUES (?, ?, ?)";
-        try{PreparedStatement preparedStatement =connection.prepareStatement(query);
+        try{
+            PreparedStatement preparedStatement =connection.prepareStatement(query);
             preparedStatement.setString(1,username.getText());
             preparedStatement.setString(3,email.getText());
             preparedStatement.setString(2,password.getText());
             preparedStatement.executeUpdate();
-            userID.setText("Success User added");
+            userID.setText("User added");
+            userID.setStyle("-fx-text-fill: green");
         }
          catch (SQLException e) {
             throw new RuntimeException(e);
@@ -163,8 +175,22 @@ public class UserController {
 
     }
 
-    private void editUserInDb(){
+    private void editUserInDb() {
+        String query = "UPDATE user SET name=?, email=?, password=? WHERE iduser = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username.getText());
+            preparedStatement.setString(2, email.getText());
+            preparedStatement.setString(3, password.getText());
+            preparedStatement.setInt(4, Integer.parseInt(userID.getText()));
+            preparedStatement.executeUpdate();
+            userID.setText("Data changed");
+            userID.setStyle("-fx-text-fill: green");
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 
 }
