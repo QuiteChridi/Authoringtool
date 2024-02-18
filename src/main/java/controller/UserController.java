@@ -49,9 +49,6 @@ public class UserController {
     Connection connection = Database.getInstance().conn;
 
 
-
-
-
     @FXML
     private void initialize() {
 
@@ -163,8 +160,8 @@ public class UserController {
         try{
             PreparedStatement preparedStatement =connection.prepareStatement(query);
             preparedStatement.setString(1,username.getText());
-            preparedStatement.setString(3,email.getText());
             preparedStatement.setString(2,password.getText());
+            preparedStatement.setString(3,email.getText());
             preparedStatement.executeUpdate();
             userID.setText("User added");
             userID.setStyle("-fx-text-fill: green");
@@ -172,7 +169,6 @@ public class UserController {
          catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private void editUserInDb() {
@@ -191,6 +187,4 @@ public class UserController {
             throw new RuntimeException(e);
         }
     }
-
-
 }

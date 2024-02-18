@@ -5,8 +5,8 @@
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.QuestionController">
     <fx:include source="menuBar.fxml" />
-    <VBox alignment="CENTER" layoutY="26.0" prefHeight="684.0" prefWidth="1038.0" spacing="10">
-        <TableView fx:id="questionTable" VBox.vgrow="ALWAYS">
+    <VBox alignment="CENTER" layoutY="406.0" prefHeight="304.0" prefWidth="1038.0" spacing="10">
+        <TableView fx:id="questionTable" prefHeight="304.0" prefWidth="1037.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="quizIdColumn" minWidth="75.0" prefWidth="75.0" text="Quiz ID" />
                 <TableColumn fx:id="questionColumn" minWidth="300.0" prefWidth="300.0" text="Question" />
@@ -17,4 +17,14 @@
             </columns>
         </TableView>
     </VBox>
+    <TableView fx:id="quizTable" layoutY="25.0" prefHeight="379.0" prefWidth="284.0">
+        <columns>
+            <TableColumn fx:id="quizIdColumnQuiz" prefWidth="75.0" text=" Quiz ID" />
+            <TableColumn fx:id="quizNameColumn" minWidth="100.0" prefWidth="200.0" text="Quiz Name" />
+        </columns>
+    </TableView>
+    <MenuButton fx:id="quizCategory" layoutX="290.0" layoutY="124.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Quiz Category">
+        <items>
+        </items>
+    </MenuButton>
 </AnchorPane>
