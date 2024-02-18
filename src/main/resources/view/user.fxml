@@ -16,45 +16,31 @@
             </columns>
         </TableView>
     </VBox>
-   <GridPane layoutX="528.0" layoutY="26.0" prefHeight="684.0" prefWidth="510.0">
-     <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints />
-     </columnConstraints>
-     <rowConstraints>
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-     </rowConstraints>
-      <children>
-          <Button mnemonicParsing="false" onMouseClicked="#select" text="Select" />
-         <Button mnemonicParsing="false" onMouseClicked="#newUser" text="New" GridPane.columnIndex="1" />
-         <Button mnemonicParsing="false" onMouseClicked="#edit" text="Edit" GridPane.rowIndex="2" />
-         <Button mnemonicParsing="false" onMouseClicked="#delete" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <Button fx:id="saveBtn" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Button layoutX="582.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#select" text="Select" />
+   <Button layoutX="688.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#newUser" text="New" />
+   <Button layoutX="738.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#edit" text="Edit" />
+   <Button layoutX="783.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#delete" text="Delete" />
+   <Button fx:id="saveBtn" layoutX="844.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" />
 
-         <VBox prefHeight="220.0" prefWidth="242.0" GridPane.rowIndex="1">
-            <children>
-               <TextField fx:id="userID" editable="false" promptText="User ID" >
-                  <VBox.margin>
-                     <Insets bottom="30.0" top="30.0" />
-                  </VBox.margin>
-               </TextField>
-               <TextField fx:id="username" promptText="Username">
-                  <VBox.margin>
-                     <Insets bottom="30.0" />
-                  </VBox.margin>
-               </TextField>
-               <TextField fx:id="email" promptText="Email">
-                  <VBox.margin>
-                     <Insets bottom="30.0" />
-                  </VBox.margin>
-               </TextField>
-               <TextField fx:id="password" promptText="Password" />
-            </children>
-         </VBox>
+   <VBox layoutX="582.0" layoutY="180.0" prefHeight="248.0" prefWidth="251.0">
+      <children>
+         <TextField fx:id="userID" editable="false" promptText="User ID">
+            <VBox.margin>
+               <Insets bottom="30.0" top="30.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="username" promptText="Username">
+            <VBox.margin>
+               <Insets bottom="30.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="email" promptText="Email">
+            <VBox.margin>
+               <Insets bottom="30.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="password" promptText="Password" />
       </children>
-   </GridPane>
+   </VBox>
 
 </AnchorPane>

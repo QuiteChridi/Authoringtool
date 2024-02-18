@@ -22,6 +22,18 @@ public class QuestionController {
     @FXML
     public MenuButton quizCategory;
     @FXML
+    public TextField categoryField;
+    @FXML
+    public TextField questionField;
+    @FXML
+    public TextField correctField;
+    @FXML
+    public TextField wrong1Field;
+    @FXML
+    public TextField wrong2Field;
+    @FXML
+    public TextField wrong3Field;
+    @FXML
     private TableColumn<Question, Integer> quizIdColumn;
 
     @FXML
@@ -48,13 +60,13 @@ public class QuestionController {
     @FXML
     private TableColumn<Quiz, String> quizNameColumn;
 
-    int selectedQuiz =1;
-
     Connection connection = Database.getInstance().conn;
 
     ObservableList<String> quizNames= FXCollections.observableArrayList();
 
     ObservableList<Question> questionData = FXCollections.observableArrayList();
+
+    int selectedQuizId;
 
 
 
@@ -72,6 +84,8 @@ public class QuestionController {
 
         quizNameColumn.setCellValueFactory(new PropertyValueFactory<>("quizName"));
         quizIdColumnQuiz.setCellValueFactory(new PropertyValueFactory<>("quizIdQuiz"));
+
+        quizTable.setFocusTraversable(false);
 
         loadQuestionData();
         loadQuizData();
@@ -132,15 +146,29 @@ public class QuestionController {
 
     private void addMenuItem(){
         MenuItem selectAllMenuItem = new MenuItem("Select All");
-        selectAllMenuItem.setOnAction(event -> filterQuestionsByQuiz(0));
+        selectAllMenuItem.setOnAction(event -> {
+            filterQuestionsByQuiz(0);
+            quizCategory.setText("Quiz Category");
+            categoryField.setText("");
+        }
+        );
         quizCategory.getItems().add(selectAllMenuItem);
         for(int i=0; i<quizNames.size();i++){
+            String quizName=quizNames.get(i);
             MenuItem menuItem= new MenuItem();
-            menuItem.setText(quizNames.get(i));
+            menuItem.setText(quizName);
             quizCategory.getItems().add(menuItem);
             int quizId = i + 1;
 
-            menuItem.setOnAction(event -> filterQuestionsByQuiz(quizId));
+            menuItem.setOnAction(
+                    event -> {
+                        selectedQuizId=quizId;
+                        filterQuestionsByQuiz(quizId);
+                        quizCategory.setText(quizName);
+                        categoryField.setText(quizName);
+                    }
+
+            );
         }
 
     }
@@ -156,6 +184,58 @@ public class QuestionController {
                 }
             }
             questionTable.setItems(filteredQuestions);
+        }
+    }
+
+    @FXML
+    private void newQuestionInDb(){
+        if(selectedQuizId==0){
+            newCategoryInDb();
+        }
+        String query = "INSERT INTO questions (quiz_idQuiz, question, correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3) VALUES (?,?,?,?,?,?)";
+        try{
+            PreparedStatement preparedStatement=connection.prepareStatement(query);
+            preparedStatement.setInt(1, selectedQuizId);
+            preparedStatement.setString(2, questionField.getText());
+            preparedStatement.setString(3, correctField.getText());
+            preparedStatement.setString(4, wrong1Field.getText());
+            preparedStatement.setString(5, wrong2Field.getText());
+            preparedStatement.setString(6, wrong3Field.getText());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void newCategoryInDb(){
+        String query= "INSERT INTO quiz (name) VALUES (?)";
+        try {
+            PreparedStatement preparedStatement=connection.prepareStatement(query);
+            preparedStatement.setString(1, categoryField.getText());
+            preparedStatement.executeUpdate();
+
+            //Test!! muss um die echte ID ergänzt werden
+            selectedQuizId=4;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    private void deleteCategoryAndQuestions(){
+        String query="DELETE FROM questions WHERE quiz_IdQuiz=?";
+        String query2="DELETE FROM quiz WHERE idQuiz=?";
+        try{
+            PreparedStatement preparedStatement= connection.prepareStatement(query);
+            preparedStatement.setInt(1, selectedQuizId);
+            PreparedStatement preparedStatement1=connection.prepareStatement(query2);
+            preparedStatement1.setInt(1,selectedQuizId);
+            preparedStatement.executeUpdate();
+            preparedStatement1.executeUpdate();
+            categoryField.setText("DELETED!");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

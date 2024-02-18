@@ -112,6 +112,7 @@ public class UserController {
           System.out.println("No User Selected");
       }
     }
+
     @FXML
     private void newUser(){
         userTable.getSelectionModel().clearSelection();

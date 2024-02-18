@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -17,14 +18,48 @@
             </columns>
         </TableView>
     </VBox>
-    <TableView fx:id="quizTable" layoutY="25.0" prefHeight="379.0" prefWidth="284.0">
+    <TableView fx:id="quizTable" editable="false" layoutY="25.0" prefHeight="379.0" prefWidth="284.0">
         <columns>
             <TableColumn fx:id="quizIdColumnQuiz" prefWidth="75.0" text=" Quiz ID" />
             <TableColumn fx:id="quizNameColumn" minWidth="100.0" prefWidth="200.0" text="Quiz Name" />
         </columns>
     </TableView>
-    <MenuButton fx:id="quizCategory" layoutX="290.0" layoutY="124.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="113.0" text="Quiz Category">
+    <MenuButton fx:id="quizCategory" layoutX="295.0" layoutY="64.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="153.0" text="Quiz Category">
         <items>
         </items>
     </MenuButton>
+   <Button layoutX="658.0" layoutY="331.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="40.0" text="New" />
+   <Button layoutX="611.0" layoutY="331.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="39.0" text="Edit" />
+   <Button layoutX="552.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#deleteCategoryAndQuestions" text="Delete" />
+   <Button layoutX="709.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#newQuestionInDb" text="Safe" />
+   <VBox layoutX="484.0" layoutY="66.0" prefHeight="204.0" prefWidth="213.0">
+      <children>
+         <TextField fx:id="categoryField" prefHeight="26.0" prefWidth="206.0" promptText="Category">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="questionField" prefHeight="26.0" prefWidth="206.0" promptText="Question">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="correctField" prefHeight="26.0" prefWidth="206.0" promptText="Correct Answer">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="wrong1Field" prefHeight="26.0" prefWidth="206.0" promptText="Wrong Answer 1">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="wrong2Field" prefHeight="26.0" prefWidth="206.0" promptText="Wrong Answer 2">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <TextField fx:id="wrong3Field" prefHeight="26.0" prefWidth="206.0" promptText="Wrong Answer 3" />
+      </children>
+   </VBox>
 </AnchorPane>
