@@ -6,22 +6,33 @@
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
     <fx:include source="menuBar.fxml" />
-    <VBox alignment="CENTER" layoutY="26.0" prefHeight="684.0" prefWidth="529.0" spacing="10">
-        <TableView fx:id="userTable" onMouseClicked="#select" prefHeight="684.0" prefWidth="528.0" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
-                <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
-                <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
-                <TableColumn fx:id="passwordColumn" prefWidth="141.20001220703125" text="Password" />
-            </columns>
-        </TableView>
-    </VBox>
-   <Button layoutX="688.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#newUser" text="New" />
-   <Button layoutX="738.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#edit" text="Edit" />
-   <Button layoutX="783.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#delete" text="Delete" />
-   <Button fx:id="saveBtn" layoutX="844.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" />
+     <TableView fx:id="userTable" layoutY="26.0" onMouseClicked="#select" prefHeight="684.0" prefWidth="684.0">
+         <columns>
+             <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
+             <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
+             <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
+             <TableColumn fx:id="passwordColumn" prefWidth="141.20001220703125" text="Password" />
+         </columns>
+     </TableView>
+   <HBox layoutX="800.0" layoutY="375.0" prefHeight="26.0" prefWidth="207.0">
+      <children>
+         <Button mnemonicParsing="false" onMouseClicked="#newUser" text="New">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin></Button>
+         <Button mnemonicParsing="false" onMouseClicked="#edit" text="Edit">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin></Button>
+         <Button mnemonicParsing="false" onMouseClicked="#delete" text="Delete">
+            <HBox.margin>
+               <Insets right="15.0" />
+            </HBox.margin></Button>
+         <Button fx:id="saveBtn" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" />
+      </children>
+   </HBox>
 
-   <VBox layoutX="582.0" layoutY="135.0" prefHeight="268.0" prefWidth="251.0">
+   <VBox layoutX="715.0" layoutY="109.0" prefHeight="235.0" prefWidth="251.0">
       <children>
          <HBox prefHeight="55.0" prefWidth="251.0">
             <children>
@@ -29,22 +40,25 @@
                <Button fx:id="searchBtn" mnemonicParsing="false" onMouseClicked="#searchOrReset" prefHeight="26.0" prefWidth="52.0" text="Search" />
             </children>
          </HBox>
-         <TextField fx:id="userID" editable="false" promptText="User ID">
+         <TextField fx:id="userID" editable="false" mouseTransparent="true" promptText="User ID">
             <VBox.margin>
-               <Insets bottom="30.0" top="30.0" />
+               <Insets bottom="20.0" top="30.0" />
             </VBox.margin>
          </TextField>
          <TextField fx:id="username" promptText="Username">
             <VBox.margin>
-               <Insets bottom="30.0" />
+               <Insets bottom="20.0" />
             </VBox.margin>
          </TextField>
          <TextField fx:id="email" promptText="Email">
             <VBox.margin>
-               <Insets bottom="30.0" />
+               <Insets bottom="20.0" />
             </VBox.margin>
          </TextField>
-         <TextField fx:id="password" promptText="Password" />
+         <TextField fx:id="password" promptText="Password">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></TextField>
       </children>
    </VBox>
 

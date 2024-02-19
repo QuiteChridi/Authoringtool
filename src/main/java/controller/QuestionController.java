@@ -34,6 +34,8 @@ public class QuestionController {
     @FXML
     public TextField wrong3Field;
     @FXML
+    public Button saveBtn;
+    @FXML
     private TableColumn<Question, Integer> quizIdColumn;
 
     @FXML
@@ -51,14 +53,6 @@ public class QuestionController {
     @FXML
     private TableColumn<Question, String> wrongAnswer3Column;
 
-    @FXML
-    private TableView<Quiz> quizTable;
-
-    @FXML
-    private TableColumn<Quiz, Integer> quizIdColumnQuiz;
-
-    @FXML
-    private TableColumn<Quiz, String> quizNameColumn;
 
     Connection connection = Database.getInstance().conn;
 
@@ -66,12 +60,13 @@ public class QuestionController {
 
     ObservableList<Question> questionData = FXCollections.observableArrayList();
 
+    Question currentSelectedQuestion;
+
     int selectedQuizId;
 
     int categoryAmount;
 
-
-
+    String primaryQuestion;
 
 
 
@@ -84,10 +79,6 @@ public class QuestionController {
         wrongAnswer2Column.setCellValueFactory(new PropertyValueFactory<>("wrongAnswer2"));
         wrongAnswer3Column.setCellValueFactory(new PropertyValueFactory<>("wrongAnswer3"));
 
-        quizNameColumn.setCellValueFactory(new PropertyValueFactory<>("quizName"));
-        quizIdColumnQuiz.setCellValueFactory(new PropertyValueFactory<>("quizIdQuiz"));
-
-        quizTable.setFocusTraversable(false);
         questionTable.setFocusTraversable(false);
 
         loadQuestionData();
@@ -136,7 +127,6 @@ public class QuestionController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        quizTable.setItems(quizData);
     }
 
     private void showAlert() {
@@ -148,7 +138,7 @@ public class QuestionController {
     }
 
     private void addMenuItem(){
-        MenuItem selectAllMenuItem = new MenuItem("Select All");
+        MenuItem selectAllMenuItem = new MenuItem("Unselect");
         selectAllMenuItem.setOnAction(event -> {
             filterQuestionsByQuiz(0);
             quizCategory.setText("Quiz Category");
@@ -191,7 +181,6 @@ public class QuestionController {
         }
     }
 
-    @FXML
     private void newQuestionInDb(){
         if(selectedQuizId==0){
             newCategoryInDb();
@@ -219,8 +208,7 @@ public class QuestionController {
             preparedStatement.setString(1, categoryField.getText());
             preparedStatement.executeUpdate();
 
-            //Test!! muss um die echte ID ergänzt werden
-            selectedQuizId=categoryAmount;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -228,6 +216,7 @@ public class QuestionController {
 
     @FXML
     private void deleteCategoryAndQuestions(){
+        saveBtn.setVisible(false);
         String query="DELETE FROM questions WHERE quiz_IdQuiz=?";
         String query2="DELETE FROM quiz WHERE idQuiz=?";
         try{
@@ -241,5 +230,64 @@ public class QuestionController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    private void  select(){
+            currentSelectedQuestion = questionTable.getSelectionModel().getSelectedItem();
+            questionField.setText(currentSelectedQuestion.getQuestion());
+            correctField.setText(currentSelectedQuestion.getCorrectAnswer());
+            wrong1Field.setText(currentSelectedQuestion.getWrongAnswer1());
+            wrong2Field.setText(currentSelectedQuestion.getWrongAnswer2());
+            wrong3Field.setText(currentSelectedQuestion.getWrongAnswer3());
+            primaryQuestion=currentSelectedQuestion.getQuestion();
+    }
+
+    @FXML
+    private void edit(){
+        saveBtn.setVisible(true);
+        saveBtn.setStyle("-fx-text-fill: green");
+        saveBtn.setText("Save");
+    }
+
+    @FXML
+    private void save(){
+        if(currentSelectedQuestion!=null){
+            editQuestionInDb();
+        }
+        else{
+            newQuestionInDb();
+        }
+    }
+
+    private void  editQuestionInDb(){
+        String query="UPDATE questions SET question=?, correctAnswer=?, wrongAnswer1=?, wrongAnswer2=?, wrongAnswer3=? WHERE quiz_idQuiz =? AND question=?";
+        try{
+            PreparedStatement preparedStatement= connection.prepareStatement(query);
+            preparedStatement.setString(1,questionField.getText());
+            preparedStatement.setString(2,correctField.getText());
+            preparedStatement.setString(3,wrong1Field.getText());
+            preparedStatement.setString(4,wrong2Field.getText());
+            preparedStatement.setString(5,wrong3Field.getText());
+
+            preparedStatement.setInt(6,selectedQuizId);
+            preparedStatement.setString(7,primaryQuestion);
+            preparedStatement.executeUpdate();
+            loadQuestionData();
+
+            categoryField.setText("Edited!");
+            saveBtn.setVisible(false);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @FXML
+    private void newQuestion(){
+        questionTable.getSelectionModel().clearSelection();
+        saveBtn.setText("Add");
+        saveBtn.setStyle("-fx-text-fill: green");
     }
 }

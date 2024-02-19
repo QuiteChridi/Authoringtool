@@ -155,6 +155,7 @@ public class UserController {
 
     @FXML
     private void delete(){
+        saveBtn.setVisible(false);
         String query= "DELETE FROM user WHERE  iduser=?";
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -185,6 +186,7 @@ public class UserController {
             loadUserData();
             userID.setText("User added");
             userID.setStyle("-fx-text-fill: green");
+            saveBtn.setVisible(false);
         }
          catch (SQLException e) {
              userID.setText("Missing required Information!");
@@ -205,9 +207,11 @@ public class UserController {
             preparedStatement.setString(3, password.getText());
             preparedStatement.setInt(4, Integer.parseInt(userID.getText()));
             preparedStatement.executeUpdate();
-            loadUserData();
+
             userID.setText("Data changed");
             userID.setStyle("-fx-text-fill: green");
+            saveBtn.setVisible(false);
+            loadUserData();
 
         } catch (SQLException e) {
             userID.setText("Missing required Information!");
