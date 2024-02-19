@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.SplitPane?>
+<SplitPane dividerPositions="0.3" orientation="VERTICAL" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
     <fx:include source="menuBar.fxml" />
+    <items>
 
-</AnchorPane>
+        <VBox>
+            <Label text="Allgemeine Statistiken" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <Label fx:id="userCountLabel" layoutX="20" layoutY="20" prefHeight="25.0" prefWidth="400.0" />
+
+        </VBox>
+        <VBox>
+            <Label text="Quiz Übersicht" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <TableView fx:id="quizTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="quizNameColumn" text="Quiz Name" />
+                    <TableColumn fx:id="averageHighscoreColumn" text="Durchschnittlicher Highscore" />
+                </columns>
+            </TableView>
+        </VBox>
+
+        <VBox>
+            <Label text="Coins Histogramm" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <BarChart fx:id="coinsHistogram" VBox.vgrow="ALWAYS">
+                <xAxis>
+                    <CategoryAxis label="User"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Coins"/>
+                </yAxis>            </BarChart>
+        </VBox>
+
+    </items>
+</SplitPane>
