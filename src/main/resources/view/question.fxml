@@ -39,7 +39,7 @@
    </HBox>
    <VBox layoutX="715.0" layoutY="109.0" prefHeight="263.0" prefWidth="238.0">
       <children>
-         <TextField fx:id="categoryField" prefHeight="26.0" prefWidth="206.0" promptText="Category">
+         <TextField fx:id="categoryField" prefHeight="26.0" prefWidth="206.0" promptText="Category" editable="false">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin>

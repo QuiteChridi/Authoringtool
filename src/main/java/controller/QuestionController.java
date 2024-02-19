@@ -138,11 +138,12 @@ public class QuestionController {
     }
 
     private void addMenuItem(){
-        MenuItem selectAllMenuItem = new MenuItem("Unselect");
+        MenuItem selectAllMenuItem = new MenuItem("New Categorie");
         selectAllMenuItem.setOnAction(event -> {
             filterQuestionsByQuiz(0);
-            quizCategory.setText("Quiz Category");
+            quizCategory.setText("New Categorie");
             categoryField.setText("");
+            categoryField.setEditable(true);
         }
         );
         quizCategory.getItems().add(selectAllMenuItem);
@@ -160,6 +161,7 @@ public class QuestionController {
                         filterQuestionsByQuiz(quizId);
                         quizCategory.setText(quizName);
                         categoryField.setText(quizName);
+                        categoryField.setEditable(false);
                     }
 
             );
@@ -207,7 +209,7 @@ public class QuestionController {
             PreparedStatement preparedStatement=connection.prepareStatement(query);
             preparedStatement.setString(1, categoryField.getText());
             preparedStatement.executeUpdate();
-
+            categoryField.setEditable(false);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
