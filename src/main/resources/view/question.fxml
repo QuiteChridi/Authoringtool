@@ -31,7 +31,7 @@
    <Button layoutX="658.0" layoutY="331.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="40.0" text="New" />
    <Button layoutX="611.0" layoutY="331.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="39.0" text="Edit" />
    <Button layoutX="552.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#deleteCategoryAndQuestions" text="Delete" />
-   <Button layoutX="709.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#newQuestionInDb" text="Safe" />
+   <Button layoutX="709.0" layoutY="331.0" mnemonicParsing="false" onMouseClicked="#newQuestionInDb" text="Save" />
    <VBox layoutX="484.0" layoutY="66.0" prefHeight="204.0" prefWidth="213.0">
       <children>
          <TextField fx:id="categoryField" prefHeight="26.0" prefWidth="206.0" promptText="Category">

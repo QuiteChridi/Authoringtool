@@ -6,24 +6,29 @@
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
     <fx:include source="menuBar.fxml" />
-    <VBox alignment="CENTER" layoutY="26.0" prefHeight="684.0" prefWidth="528.0" spacing="10">
-        <TableView fx:id="userTable" VBox.vgrow="ALWAYS">
+    <VBox alignment="CENTER" layoutY="26.0" prefHeight="684.0" prefWidth="529.0" spacing="10">
+        <TableView fx:id="userTable" onMouseClicked="#select" prefHeight="684.0" prefWidth="528.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="userIdColumn" prefWidth="75.0" text="User ID" />
                 <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
                 <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
-                <TableColumn fx:id="passwordColumn" prefWidth="150.0" text="Password" />
+                <TableColumn fx:id="passwordColumn" prefWidth="141.20001220703125" text="Password" />
             </columns>
         </TableView>
     </VBox>
-    <Button layoutX="582.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#select" text="Select" />
    <Button layoutX="688.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#newUser" text="New" />
    <Button layoutX="738.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#edit" text="Edit" />
    <Button layoutX="783.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#delete" text="Delete" />
    <Button fx:id="saveBtn" layoutX="844.0" layoutY="415.0" mnemonicParsing="false" onMouseClicked="#save" text="Save" visible="false" />
 
-   <VBox layoutX="582.0" layoutY="180.0" prefHeight="248.0" prefWidth="251.0">
+   <VBox layoutX="582.0" layoutY="135.0" prefHeight="268.0" prefWidth="251.0">
       <children>
+         <HBox prefHeight="55.0" prefWidth="251.0">
+            <children>
+               <TextField fx:id="searchField" prefHeight="26.0" prefWidth="200.0" promptText="Entry Username or ID" />
+               <Button fx:id="searchBtn" mnemonicParsing="false" onMouseClicked="#searchOrReset" prefHeight="26.0" prefWidth="52.0" text="Search" />
+            </children>
+         </HBox>
          <TextField fx:id="userID" editable="false" promptText="User ID">
             <VBox.margin>
                <Insets bottom="30.0" top="30.0" />

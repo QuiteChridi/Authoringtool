@@ -12,11 +12,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class UserController {
 
     @FXML
     public Button saveBtn;
+    @FXML
+    public Button searchBtn;
+
     @FXML
     private TableView<User> userTable;
 
@@ -44,6 +51,11 @@ public class UserController {
     @FXML
     public TextField userID;
 
+    @FXML
+    public TextField searchField;
+
+    public ObservableList<User> userData = FXCollections.observableArrayList();
+
     User currentSelectedUser;
 
     Connection connection = Database.getInstance().conn;
@@ -57,13 +69,12 @@ public class UserController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
 
+        userTable.setFocusTraversable(false);
         loadUserData();
 
     }
 
     private void loadUserData() {
-        ObservableList<User> userData = FXCollections.observableArrayList();
-
         try {
             String query = "SELECT * FROM user";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -109,7 +120,6 @@ public class UserController {
       catch (RuntimeException v){
           userID.setText("No User Selected!");
           userID.setStyle("-fx-text-fill: red");
-          System.out.println("No User Selected");
       }
     }
 
@@ -117,19 +127,21 @@ public class UserController {
     private void newUser(){
         userTable.getSelectionModel().clearSelection();
         userID.setText("Entry Userdata");
+        userID.setStyle("-fx-text-fill: black");
         username.setText("");
         email.setText("");
         password.setText("");
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
-        saveBtn.setText("add");
+        saveBtn.setText("Add");
     }
 
     @FXML
     private void edit(){
+        userID.setStyle("-fx-text-fill: black");
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
-        saveBtn.setText("save");
+        saveBtn.setText("Save");
     }
     @FXML
     private void save(){
@@ -148,10 +160,16 @@ public class UserController {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Integer.parseInt(userID.getText()));
             preparedStatement.executeUpdate();
-            userID.setText("User deleted");
+            loadUserData();
+            userID.setText("Deleted");
             userID.setStyle("-fx-text-fill: red");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Catched aber nicht catched");
+            userID.setText("No User Selected!");
+            userID.setStyle("-fx-text-fill: red");
+        } catch (RuntimeException r){
+            userID.setText("No User Selected!");
+            userID.setStyle("-fx-text-fill: red");
         }
 
     }
@@ -164,11 +182,17 @@ public class UserController {
             preparedStatement.setString(2,password.getText());
             preparedStatement.setString(3,email.getText());
             preparedStatement.executeUpdate();
+            loadUserData();
             userID.setText("User added");
             userID.setStyle("-fx-text-fill: green");
         }
          catch (SQLException e) {
-            throw new RuntimeException(e);
+             userID.setText("Missing required Information!");
+             userID.setStyle("-fx-text-fill: red");
+        }
+        catch(RuntimeException r){
+            userID.setText("Missing required Information!");
+            userID.setStyle("-fx-text-fill: red");
         }
     }
 
@@ -181,11 +205,51 @@ public class UserController {
             preparedStatement.setString(3, password.getText());
             preparedStatement.setInt(4, Integer.parseInt(userID.getText()));
             preparedStatement.executeUpdate();
+            loadUserData();
             userID.setText("Data changed");
             userID.setStyle("-fx-text-fill: green");
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            userID.setText("Missing required Information!");
+            userID.setStyle("-fx-text-fill: red");
         }
+    }
+    @FXML
+    private void searchOrReset(){
+        String btnText= searchBtn.getText();
+        if(Objects.equals(btnText, "Reset")){
+            resetUserTable();
+        }
+        else{
+            search();
+        }
+    }
+
+    private void  resetUserTable(){
+        searchField.setText("");
+        searchBtn.setText("Search");
+        userTable.getItems().clear();
+        loadUserData();
+    }
+
+    private void search(){
+        searchBtn.setText("Reset");
+        String searchTerm = searchField.getText().toLowerCase();
+
+        Predicate<User> filterByUsername = user -> user.getUsername().toLowerCase().contains(searchTerm);
+        Predicate<User> filterById = user -> String.valueOf(user.getUserId()).contains(searchTerm);
+
+        Predicate<User> combinedFilter = filterByUsername.or(filterById);
+
+        List<User> filteredUsers = userTable.getItems().stream()
+                .filter(combinedFilter)
+                .collect(Collectors.toList());
+
+        updateTableView(filteredUsers);
+    }
+
+    private void updateTableView(List<User> users) {
+        userTable.getItems().clear();
+        userTable.getItems().addAll(users);
     }
 }

@@ -68,6 +68,8 @@ public class QuestionController {
 
     int selectedQuizId;
 
+    int categoryAmount;
+
 
 
 
@@ -86,6 +88,7 @@ public class QuestionController {
         quizIdColumnQuiz.setCellValueFactory(new PropertyValueFactory<>("quizIdQuiz"));
 
         quizTable.setFocusTraversable(false);
+        questionTable.setFocusTraversable(false);
 
         loadQuestionData();
         loadQuizData();
@@ -159,6 +162,7 @@ public class QuestionController {
             menuItem.setText(quizName);
             quizCategory.getItems().add(menuItem);
             int quizId = i + 1;
+            categoryAmount =i;
 
             menuItem.setOnAction(
                     event -> {
@@ -216,7 +220,7 @@ public class QuestionController {
             preparedStatement.executeUpdate();
 
             //Test!! muss um die echte ID ergänzt werden
-            selectedQuizId=4;
+            selectedQuizId=categoryAmount;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
