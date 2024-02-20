@@ -66,6 +66,8 @@ public class QuestionController {
 
     String primaryQuestion;
 
+    Quiz selectedQuiz;
+
 
 
     @FXML
@@ -155,6 +157,7 @@ public class QuestionController {
 
             menuItem.setOnAction(
                     event -> {
+                        categoryField.setStyle("-fx-text-fill: black");
                         selectedQuizId = quizId;
                         filterQuestionsByQuiz(quizId);
                         quizCategory.setText(quizName);
@@ -180,13 +183,28 @@ public class QuestionController {
         }
     }
 
-    private void newQuestionInDb(){
-        if(selectedQuizId==0){
-            newCategoryInDb();
+    private int newCategoryInDb() {
+        String query = "INSERT INTO quiz (name) VALUES (?)";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, categoryField.getText());
+            preparedStatement.executeUpdate();
+            categoryField.setEditable(false);
+            loadQuizData();
+            return getNewestQuizId();
+        } catch (SQLException e) {
+            System.out.println("newCategoryDidntWork");
+            return -1;
+        }
+    }
+
+    private void newQuestionInDb() {
+        if (selectedQuizId == 0) {
+            selectedQuizId = newCategoryInDb();
         }
         String query = "INSERT INTO questions (quiz_idQuiz, question, correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3) VALUES (?,?,?,?,?,?)";
-        try{
-            PreparedStatement preparedStatement=connection.prepareStatement(query);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, selectedQuizId);
             preparedStatement.setString(2, questionField.getText());
             preparedStatement.setString(3, correctField.getText());
@@ -196,27 +214,20 @@ public class QuestionController {
             preparedStatement.executeUpdate();
             loadQuestionData();
 
+            categoryField.setText("New User!");
+            categoryField.setStyle("-fx-text-fill: green");
+            saveBtn.setVisible(false);
+            questionField.clear();
+            correctField.clear();
+            wrong1Field.clear();
+            wrong2Field.clear();
+            wrong3Field.clear();
+
         } catch (SQLException e) {
             System.out.println("new Question Problem");
         }
     }
 
-    private void newCategoryInDb(){
-        String query= "INSERT INTO quiz (name) VALUES (?)";
-        try {
-            PreparedStatement preparedStatement=connection.prepareStatement(query);
-            preparedStatement.setString(1, categoryField.getText());
-            preparedStatement.executeUpdate();
-            categoryField.setEditable(false);
-            loadQuizData();
-            selectedQuizId=getNewestQuizId();
-            newQuestionInDb();
-
-
-        } catch (SQLException e) {
-            System.out.println("newCategoryDidntWork");
-        }
-    }
 
     @FXML
     private void deleteQuestions(){
@@ -230,6 +241,12 @@ public class QuestionController {
             preparedStatement.executeUpdate();
             loadQuestionData();
             categoryField.setText("DELETED!");
+            categoryField.setStyle("-fx-text-fill: red");
+            questionField.clear();
+            correctField.clear();
+            wrong1Field.clear();
+            wrong2Field.clear();
+            wrong3Field.clear();
             if(!checkIfCategoryHasQuestion(quizId)){
                 deleteQuizCategory();
             }
@@ -269,7 +286,11 @@ public class QuestionController {
 
     @FXML
     private void  select(){
+            categoryField.setStyle("-fx-text-fill: black");
             currentSelectedQuestion = questionTable.getSelectionModel().getSelectedItem();
+            selectedQuizId=currentSelectedQuestion.getQuizId();
+            selectQuiz();
+            categoryField.setText(selectedQuiz.getQuizName());
             questionField.setText(currentSelectedQuestion.getQuestion());
             correctField.setText(currentSelectedQuestion.getCorrectAnswer());
             wrong1Field.setText(currentSelectedQuestion.getWrongAnswer1());
@@ -280,6 +301,7 @@ public class QuestionController {
 
     @FXML
     private void edit(){
+        categoryField.setStyle("-fx-text-fill: black");
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
         saveBtn.setText("Save");
@@ -311,7 +333,13 @@ public class QuestionController {
             loadQuestionData();
 
             categoryField.setText("Edited!");
+            categoryField.setStyle("-fx-text-fill: green");
             saveBtn.setVisible(false);
+            questionField.clear();
+            correctField.clear();
+            wrong1Field.clear();
+            wrong2Field.clear();
+            wrong3Field.clear();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -321,6 +349,7 @@ public class QuestionController {
 
     @FXML
     private void newQuestion(){
+        categoryField.setStyle("-fx-text-fill: black");
         questionTable.getSelectionModel().clearSelection();
         saveBtn.setVisible(true);
         saveBtn.setText("Add");
@@ -335,5 +364,14 @@ public class QuestionController {
             }
         }
         return highestQuizID;
+    }
+
+    private void selectQuiz(){
+        for (Quiz quiz : quizData) {
+            if (quiz.getQuizIdQuiz()==(selectedQuizId)) {
+                selectedQuiz = quiz;
+            }
+        }
+
     }
 }
