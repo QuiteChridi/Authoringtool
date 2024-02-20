@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.SplitPane?>
-<SplitPane dividerPositions="0.3" orientation="VERTICAL" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
+
+<SplitPane dividerPositions="0.040930754135127555, 0.321278385197645, 0.6114381833473507" orientation="VERTICAL" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
     <fx:include source="menuBar.fxml" />
-    <items>
+    <VBox prefHeight="135.0" prefWidth="1036.0">
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Allgemeine Statistiken" />
+        <Label fx:id="userCountLabel" layoutX="20" layoutY="20" prefHeight="25.0" prefWidth="400.0" />
+        <Label fx:id="totalJokersLabel" layoutX="20" layoutY="50" text="Gesamtanzahl der Joker: 0" />
+        <Label fx:id="totalQuestionsLabel" text="Gesamtanzahl der Fragen: 0" />
+        <Label fx:id="totalQuizzesLabel" text="Gesamtanzahl der Quizzes: 0" />
 
-        <VBox>
-            <Label text="Allgemeine Statistiken" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <Label fx:id="userCountLabel" layoutX="20" layoutY="20" prefHeight="25.0" prefWidth="400.0" />
 
-        </VBox>
-        <VBox>
-            <Label text="Quiz Übersicht" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <TableView fx:id="quizTableView" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="quizNameColumn" text="Quiz Name" />
-                    <TableColumn fx:id="averageHighscoreColumn" text="Durchschnittlicher Highscore" />
-                </columns>
-            </TableView>
-        </VBox>
+    </VBox>
+    <HBox alignment="BASELINE_CENTER" prefHeight="201.0" prefWidth="727.0">
+      <VBox prefHeight="201.0" prefWidth="163.0">
+         <children>
+              <TextField fx:id="searchUserTextField" onKeyReleased="#filterUsersList" promptText="Suche Nutzer..." />
+              <ListView fx:id="usersListView" onMouseClicked="#handleUserSelection" prefHeight="201.0" prefWidth="207.0" />
+         </children>
+      </VBox>
+       <BarChart fx:id="userHighscoresHistogram">
+           <xAxis>
+               <CategoryAxis label="Quiz" />
+           </xAxis>
+           <yAxis>
+               <NumberAxis label="Highscore" />
+           </yAxis>
+       </BarChart>
+    </HBox>
 
-        <VBox>
-            <Label text="Coins Histogramm" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <BarChart fx:id="coinsHistogram" VBox.vgrow="ALWAYS">
-                <xAxis>
-                    <CategoryAxis label="User"/>
-                </xAxis>
-                <yAxis>
-                    <NumberAxis label="Coins"/>
-                </yAxis>            </BarChart>
-        </VBox>
+    <VBox>
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quiz Übersicht" />
+        <TableView fx:id="quizTableView" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="quizNameColumn" text="Quiz Name" />
+                <TableColumn fx:id="averageHighscoreColumn" text="Durchschnittlicher Highscore" />
+            </columns>
+        </TableView>
+    </VBox>
 
-    </items>
 </SplitPane>
