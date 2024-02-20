@@ -235,14 +235,12 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
-            series.setName("Highscores für UserID: " + userId);
 
             while (resultSet.next()) {
                 series.getData().add(new XYChart.Data<>(
                         resultSet.getString("name"),
                         resultSet.getInt("highscore")
                 ));
-                System.out.println("resultset für chart " + resultSet.getString("name") + resultSet.getString("highscore"));
             }
             userHighscoresHistogram.getData().add(series);
         } catch (SQLException e) {

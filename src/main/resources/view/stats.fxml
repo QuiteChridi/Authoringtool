@@ -1,45 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.040930754135127555, 0.321278385197645, 0.6114381833473507" orientation="VERTICAL" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
+<ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
+    <VBox>
     <fx:include source="menuBar.fxml" />
     <VBox prefHeight="135.0" prefWidth="1036.0">
-        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Allgemeine Statistiken" />
-        <Label fx:id="userCountLabel" layoutX="20" layoutY="20" prefHeight="25.0" prefWidth="400.0" />
-        <Label fx:id="totalJokersLabel" layoutX="20" layoutY="50" text="Gesamtanzahl der Joker: 0" />
-        <Label fx:id="totalQuestionsLabel" text="Gesamtanzahl der Fragen: 0" />
-        <Label fx:id="totalQuizzesLabel" text="Gesamtanzahl der Quizzes: 0" />
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Allgemeine Statistiken">
+            <padding>
+               <Insets bottom="5.0" left="15.0" top="15.0" />
+            </padding></Label>
+        <Label fx:id="userCountLabel" text="Gesamtanzahl der Nutzer: 0">
+        <padding>
+            <Insets left="15.0" />
+        </padding></Label>
+        <Label fx:id="totalJokersLabel" layoutX="20" layoutY="50" text="Gesamtanzahl der Joker: 0">
+            <padding>
+               <Insets left="15.0" />
+            </padding></Label>
+        <Label fx:id="totalQuestionsLabel" text="Gesamtanzahl der Fragen: 0">
+            <padding>
+               <Insets left="15.0" />
+            </padding></Label>
+        <Label fx:id="totalQuizzesLabel" text="Gesamtanzahl der Quizzes: 0">
+            <padding>
+               <Insets left="15.0" />
+            </padding></Label>
 
 
     </VBox>
-    <HBox alignment="BASELINE_CENTER" prefHeight="201.0" prefWidth="727.0">
-      <VBox prefHeight="201.0" prefWidth="163.0">
-         <children>
-              <TextField fx:id="searchUserTextField" onKeyReleased="#filterUsersList" promptText="Suche Nutzer..." />
-              <ListView fx:id="usersListView" onMouseClicked="#handleUserSelection" prefHeight="201.0" prefWidth="207.0" />
-         </children>
-      </VBox>
-       <BarChart fx:id="userHighscoresHistogram">
-           <xAxis>
-               <CategoryAxis label="Quiz" />
-           </xAxis>
-           <yAxis>
-               <NumberAxis label="Highscore" />
-           </yAxis>
-       </BarChart>
-    </HBox>
+        <VBox prefHeight="200.0" prefWidth="100.0">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Highscores eines Nutzers">
+                <padding>
+                    <Insets bottom="5.0" left="15.0" top="15.0" />
+                </padding>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="201.0" prefWidth="727.0">
+                <VBox prefHeight="151.0" prefWidth="176.0">
+                    <padding>
+                        <Insets left="20.0" />
+                    </padding>
+                    <TextField fx:id="searchUserTextField" onKeyReleased="#filterUsersList" promptText="Suche Nutzer...">
+                  <VBox.margin>
+                     <Insets bottom="3.0" />
+                  </VBox.margin></TextField>
+                    <ListView fx:id="usersListView" minHeight="-Infinity" onMouseClicked="#handleUserSelection" prefHeight="125.0" prefWidth="156.0">
+                        <opaqueInsets>
+                            <Insets left="20.0" />
+                        </opaqueInsets>
+                  <VBox.margin>
+                     <Insets bottom="20.0" />
+                  </VBox.margin>
+                    </ListView>
+                </VBox>
+                <BarChart fx:id="userHighscoresHistogram" prefHeight="174.0" prefWidth="601.0">
+                    <xAxis>
+                        <CategoryAxis label="Quiz" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Highscore" prefHeight="118.0" prefWidth="52.0" />
+                    </yAxis>
+                </BarChart>
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
+            </HBox>
+        </VBox>
 
     <VBox>
-        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quiz Übersicht" />
-        <TableView fx:id="quizTableView" VBox.vgrow="ALWAYS">
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quiz Übersicht">
+            <VBox.margin>
+               <Insets bottom="5.0" left="20.0" />
+            </VBox.margin></Label>
+        <TableView fx:id="quizTableView" nodeOrientation="LEFT_TO_RIGHT">
             <columns>
                 <TableColumn fx:id="quizNameColumn" text="Quiz Name" />
-                <TableColumn fx:id="averageHighscoreColumn" text="Durchschnittlicher Highscore" />
+                <TableColumn fx:id="averageHighscoreColumn" prefWidth="200.0" text="Durchschnittlicher Highscore" />
             </columns>
+            <VBox.margin>
+               <Insets left="20.0" />
+            </VBox.margin>
         </TableView>
     </VBox>
-
-</SplitPane>
+    </VBox>
+</ScrollPane>
