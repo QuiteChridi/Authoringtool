@@ -17,7 +17,6 @@ public class AuthoringTool extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
         primaryStage.setTitle("Authoring Tool");
         Scene scene = new Scene(root, 600, 400);
-        scene.getStylesheets().add("/css/stylesheet.css");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -38,7 +38,6 @@ public class LoginController implements Initializable {
                 Stage stage = (Stage) host.getScene().getWindow();
                 Parent root = FXMLLoader.load(getClass().getResource("/view/user.fxml"));
                 Scene scene = new Scene(root);
-                scene.getStylesheets().add("/css/stylesheet.css");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException e) {
