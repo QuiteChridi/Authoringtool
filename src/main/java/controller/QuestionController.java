@@ -56,15 +56,13 @@ public class QuestionController {
 
     Connection connection = Database.getInstance().conn;
 
-    ObservableList<String> quizNames= FXCollections.observableArrayList();
-
     ObservableList<Question> questionData = FXCollections.observableArrayList();
+
+    ObservableList<Quiz> quizData= FXCollections.observableArrayList();
 
     Question currentSelectedQuestion;
 
     int selectedQuizId;
-
-    int categoryAmount;
 
     String primaryQuestion;
 
@@ -83,10 +81,10 @@ public class QuestionController {
 
         loadQuestionData();
         loadQuizData();
-        addMenuItem();
     }
 
     private void loadQuestionData(){
+        questionData.clear();
             String query= "SELECT * FROM questions";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -112,7 +110,7 @@ public class QuestionController {
     }
 
     private void loadQuizData(){
-        ObservableList<Quiz> quizData= FXCollections.observableArrayList();
+        quizData.clear();
         String query="SELECT * FROM quiz";
         try(PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet =preparedStatement.executeQuery()) {
@@ -120,12 +118,12 @@ public class QuestionController {
                 int quizId= resultSet.getInt("idQuiz");
                 String quizName= resultSet.getString("name");
 
-                quizNames.add(quizName);
                 Quiz results = new Quiz(quizId,quizName);
                 quizData.add(results);
             }
+            addMenuItem();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Fehler in Load Quizdata");
         }
     }
 
@@ -138,6 +136,7 @@ public class QuestionController {
     }
 
     private void addMenuItem(){
+        quizCategory.getItems().clear();
         MenuItem selectAllMenuItem = new MenuItem("New Categorie");
         selectAllMenuItem.setOnAction(event -> {
             filterQuestionsByQuiz(0);
@@ -147,23 +146,21 @@ public class QuestionController {
         }
         );
         quizCategory.getItems().add(selectAllMenuItem);
-        for(int i=0; i<quizNames.size();i++){
-            String quizName=quizNames.get(i);
-            MenuItem menuItem= new MenuItem();
+        for (Quiz quizDatum : quizData) {
+            String quizName = quizDatum.getQuizName();
+            MenuItem menuItem = new MenuItem();
             menuItem.setText(quizName);
             quizCategory.getItems().add(menuItem);
-            int quizId = i + 1;
-            categoryAmount =i;
+            int quizId = quizDatum.getQuizIdQuiz();
 
             menuItem.setOnAction(
                     event -> {
-                        selectedQuizId=quizId;
+                        selectedQuizId = quizId;
                         filterQuestionsByQuiz(quizId);
                         quizCategory.setText(quizName);
                         categoryField.setText(quizName);
                         categoryField.setEditable(false);
                     }
-
             );
         }
 
@@ -197,9 +194,10 @@ public class QuestionController {
             preparedStatement.setString(5, wrong2Field.getText());
             preparedStatement.setString(6, wrong3Field.getText());
             preparedStatement.executeUpdate();
+            loadQuestionData();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("new Question Problem");
         }
     }
 
@@ -210,27 +208,62 @@ public class QuestionController {
             preparedStatement.setString(1, categoryField.getText());
             preparedStatement.executeUpdate();
             categoryField.setEditable(false);
+            loadQuizData();
+            selectedQuizId=getNewestQuizId();
+            newQuestionInDb();
+
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("newCategoryDidntWork");
         }
     }
 
     @FXML
-    private void deleteCategoryAndQuestions(){
+    private void deleteQuestions(){
         saveBtn.setVisible(false);
-        String query="DELETE FROM questions WHERE quiz_IdQuiz=?";
-        String query2="DELETE FROM quiz WHERE idQuiz=?";
+        String query="DELETE FROM questions WHERE quiz_IdQuiz=? AND question=?";
         try{
+            int quizId=selectedQuizId;
             PreparedStatement preparedStatement= connection.prepareStatement(query);
             preparedStatement.setInt(1, selectedQuizId);
+            preparedStatement.setString(2,questionField.getText());
+            preparedStatement.executeUpdate();
+            loadQuestionData();
+            categoryField.setText("DELETED!");
+            if(!checkIfCategoryHasQuestion(quizId)){
+                deleteQuizCategory();
+            }
+        } catch (SQLException e) {
+            System.out.println("Problem Delete");
+        }
+    }
+
+    private boolean checkIfCategoryHasQuestion(int quizId){
+        String query = "SELECT COUNT(*) AS count FROM questions WHERE quiz_idQuiz=?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, quizId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private void deleteQuizCategory(){
+        String query2="DELETE FROM quiz WHERE idQuiz=?";
+        try{
             PreparedStatement preparedStatement1=connection.prepareStatement(query2);
             preparedStatement1.setInt(1,selectedQuizId);
-            preparedStatement.executeUpdate();
             preparedStatement1.executeUpdate();
-            categoryField.setText("DELETED!");
+            loadQuizData();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("Problem Delete QUizCAtegroy");
         }
     }
 
@@ -289,7 +322,18 @@ public class QuestionController {
     @FXML
     private void newQuestion(){
         questionTable.getSelectionModel().clearSelection();
+        saveBtn.setVisible(true);
         saveBtn.setText("Add");
         saveBtn.setStyle("-fx-text-fill: green");
+    }
+
+    private int getNewestQuizId(){
+        int highestQuizID=0;
+        for(Quiz quiz: quizData){
+            if(highestQuizID<quiz.getQuizIdQuiz()){
+                highestQuizID=quiz.getQuizIdQuiz();
+            }
+        }
+        return highestQuizID;
     }
 }

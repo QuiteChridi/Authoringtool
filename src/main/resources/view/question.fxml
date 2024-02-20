@@ -30,7 +30,7 @@
             <HBox.margin>
                <Insets right="10.0" />
             </HBox.margin></Button>
-         <Button mnemonicParsing="false" onMouseClicked="#deleteCategoryAndQuestions" prefHeight="26.0" prefWidth="50.0" text="Delete">
+         <Button mnemonicParsing="false" onMouseClicked="#deleteQuestions" prefHeight="26.0" prefWidth="50.0" text="Delete">
             <HBox.margin>
                <Insets right="15.0" />
             </HBox.margin></Button>
