@@ -1,13 +1,17 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import model.Database;
 
 import java.sql.*;
@@ -17,6 +21,8 @@ import java.util.stream.Collectors;
 
 public class StatsController {
 
+    @FXML
+    private Label noHighscoresLabel;
     @FXML
     private Label userCountLabel;
     @FXML
@@ -185,7 +191,6 @@ public class StatsController {
         filteredUsers.setAll(allUsers.stream()
                 .filter(name -> name.toLowerCase().contains(searchText))
                 .collect(Collectors.toList()));
-        // Diese Zeile könnte notwendig sein, wenn die ListView sich nicht automatisch aktualisiert.
         usersListView.refresh();
     }
 
@@ -202,7 +207,7 @@ public class StatsController {
     }
 
     private int getUserIdByUsername(String username) {
-        // Beispielhafte Implementierung, die eine Datenbankabfrage durchführt, um die userId zu erhalten
+
         String query = "SELECT iduser FROM user WHERE name = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
@@ -220,31 +225,43 @@ public class StatsController {
     private void loadUserHighscores(int userId) {
         userHighscoresHistogram.getData().clear();
 
+        noHighscoresLabel.setVisible(false); // Verstecke das Label zunächst
+        userHighscoresHistogram.setVisible(true); // Stelle sicher, dass das Diagramm sichtbar ist
+
         String query = "SELECT quiz.name, highscores.highscore "
                 + "FROM highscores "
                 + "JOIN quiz ON highscores.quiz_idQuiz = quiz.idQuiz "
                 + "WHERE highscores.user_iduser = ? "
                 + "ORDER BY highscores.highscore DESC;";
 
-        System.out.println(query);
-        System.out.println(userId);
-
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, userId);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-
             XYChart.Series<String, Number> series = new XYChart.Series<>();
 
+            boolean hasData = false;
             while (resultSet.next()) {
+                hasData = true; // Es gibt Highscores
                 series.getData().add(new XYChart.Data<>(
                         resultSet.getString("name"),
                         resultSet.getInt("highscore")
                 ));
             }
-            userHighscoresHistogram.getData().add(series);
+
+            if (!hasData) {
+                // Es gibt keine Highscores, zeige das Label an und verstecke das Diagramm
+                noHighscoresLabel.setVisible(true);
+                userHighscoresHistogram.setVisible(false);
+            } else {
+                // Es gibt Highscores, füge die Serie zum Diagramm hinzu und stelle sicher, dass das Diagramm sichtbar ist
+                userHighscoresHistogram.getData().add(series);
+                noHighscoresLabel.setVisible(false);
+                userHighscoresHistogram.setVisible(true);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

@@ -56,7 +56,13 @@
                   </VBox.margin>
                     </ListView>
                 </VBox>
+
+                <StackPane fx:id="chartContainer">
+
+                <Label fx:id="noHighscoresLabel" text="Dieser Benutzer hat keine Highscores." visible="false" />
+
                 <BarChart fx:id="userHighscoresHistogram" prefHeight="174.0" prefWidth="601.0">
+
                     <xAxis>
                         <CategoryAxis label="Quiz" />
                     </xAxis>
@@ -64,9 +70,11 @@
                         <NumberAxis label="Highscore" prefHeight="118.0" prefWidth="52.0" />
                     </yAxis>
                 </BarChart>
+
                 <opaqueInsets>
                     <Insets />
                 </opaqueInsets>
+                </StackPane>
             </HBox>
         </VBox>
 
@@ -77,8 +85,8 @@
             </VBox.margin></Label>
         <TableView fx:id="quizTableView" nodeOrientation="LEFT_TO_RIGHT">
             <columns>
-                <TableColumn fx:id="quizNameColumn" text="Quiz Name" />
-                <TableColumn fx:id="averageHighscoreColumn" prefWidth="200.0" text="Durchschnittlicher Highscore" />
+                <TableColumn fx:id="quizNameColumn" prefWidth="132.20001411437988" text="Quiz Name" />
+                <TableColumn fx:id="averageHighscoreColumn" prefWidth="617.4000701904297" text="Durchschnittlicher Highscore" />
             </columns>
             <VBox.margin>
                <Insets left="20.0" />
