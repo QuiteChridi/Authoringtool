@@ -12,9 +12,10 @@
              <TableColumn fx:id="usernameColumn" prefWidth="150.0" text="Username" />
              <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
              <TableColumn fx:id="passwordColumn" prefWidth="141.20001220703125" text="Password" />
+             <TableColumn fx:id="coinsColumn" prefWidth="75" text="Coins" />
          </columns>
      </TableView>
-   <HBox layoutX="817.0" layoutY="334.0" prefHeight="26.0" prefWidth="206.0">
+   <HBox layoutX="817.0" layoutY="380.0" prefHeight="26.0" prefWidth="206.0">
       <children>
          <Button mnemonicParsing="false" onMouseClicked="#newUser" text="New">
             <HBox.margin>
@@ -56,6 +57,10 @@
             </VBox.margin>
          </TextField>
          <TextField fx:id="password" promptText="Password">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></TextField>
+         <TextField fx:id="coins" promptText="Coins">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin></TextField>

@@ -40,6 +40,9 @@ public class UserController {
     private TableColumn<User, String> passwordColumn;
 
     @FXML
+    private TableColumn<User,Integer> coinsColumn;
+
+    @FXML
     public TextField password;
 
     @FXML
@@ -53,6 +56,8 @@ public class UserController {
 
     @FXML
     public TextField searchField;
+    @FXML
+    public TextField coins;
 
     public ObservableList<User> userData = FXCollections.observableArrayList();
 
@@ -68,6 +73,7 @@ public class UserController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
+        coinsColumn.setCellValueFactory(new PropertyValueFactory<>("coins"));
 
         userTable.setFocusTraversable(false);
         loadUserData();
@@ -85,9 +91,10 @@ public class UserController {
                     String username = resultSet.getString("name");
                     String email = resultSet.getString("email");
                     String password = resultSet.getString("password");
+                    int coins=resultSet.getInt("coins");
 
 
-                    userData.add(new User(userId, username, email, password));
+                    userData.add(new User(userId, username, email, password,coins));
                 }
             }
         } catch (SQLException e) {
@@ -115,6 +122,7 @@ public class UserController {
           username.setText(currentSelectedUser.getUsername());
           email.setText(currentSelectedUser.getEmail());
           password.setText(currentSelectedUser.getPassword());
+          coins.setText(String.valueOf(currentSelectedUser.getCoins()));
       }
       catch (RuntimeException v){
           userID.setText("No User Selected!");
@@ -130,6 +138,7 @@ public class UserController {
         username.clear();
         password.clear();
         email.clear();
+        coins.clear();
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
         saveBtn.setText("Add");
@@ -166,6 +175,7 @@ public class UserController {
             username.clear();
             password.clear();
             email.clear();
+            coins.clear();
         } catch (SQLException e) {
             System.out.println("Catched aber nicht catched");
             userID.setText("No User Selected!");
@@ -178,12 +188,13 @@ public class UserController {
     }
 
     private void createUser(){
-        String query= "INSERT INTO user (name, password, email) VALUES (?, ?, ?)";
+        String query= "INSERT INTO user (name, password, email,coins) VALUES (?, ?, ?,?)";
         try{
             PreparedStatement preparedStatement =connection.prepareStatement(query);
             preparedStatement.setString(1,username.getText());
             preparedStatement.setString(2,password.getText());
             preparedStatement.setString(3,email.getText());
+            preparedStatement.setInt(4, Integer.parseInt(coins.getText()));
             preparedStatement.executeUpdate();
             loadUserData();
             userID.setText("User added");
@@ -193,24 +204,21 @@ public class UserController {
             password.clear();
             email.clear();
         }
-         catch (SQLException e) {
+         catch (SQLException | RuntimeException e) {
              userID.setText("Missing required Information!");
              userID.setStyle("-fx-text-fill: red");
-        }
-        catch(RuntimeException r){
-            userID.setText("Missing required Information!");
-            userID.setStyle("-fx-text-fill: red");
         }
     }
 
     private void editUserInDb() {
-        String query = "UPDATE user SET name=?, email=?, password=? WHERE iduser = ?";
+        String query = "UPDATE user SET name=?, email=?, password=?, coins=? WHERE iduser = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username.getText());
             preparedStatement.setString(2, email.getText());
             preparedStatement.setString(3, password.getText());
-            preparedStatement.setInt(4, Integer.parseInt(userID.getText()));
+            preparedStatement.setInt(4, Integer.parseInt(coins.getText()));
+            preparedStatement.setInt(5, Integer.parseInt(userID.getText()));
             preparedStatement.executeUpdate();
 
             userID.setText("Data changed");
@@ -219,6 +227,7 @@ public class UserController {
             username.clear();
             password.clear();
             email.clear();
+            coins.clear();
             loadUserData();
 
         } catch (SQLException e) {

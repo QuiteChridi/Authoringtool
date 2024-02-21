@@ -7,11 +7,14 @@ public class User {
     private String email;
     private String password;
 
-    public User(int userId, String username, String email, String password) {
+    private int coins;
+
+    public User(int userId, String username, String email, String password, int coins) {
         this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.coins=coins;
     }
 
     public int getUserId() {
@@ -29,6 +32,9 @@ public class User {
     public String getPassword() {
         return password;
     }
+    public int getCoins(){
+        return coins;
+    }
 
 
     public void setUserId(int userId) {
@@ -45,6 +51,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setCoins(int coins){
+        this.coins=coins;
     }
 
 }
