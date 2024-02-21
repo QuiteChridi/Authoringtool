@@ -8,9 +8,9 @@
     <fx:include source="menuBar.fxml" />
    <TableView fx:id="jokerTable" layoutY="27.0" onMouseClicked="#select" prefHeight="488.0" prefWidth="585.0">
      <columns>
-         <TableColumn fx:id="priceColumn" prefWidth="75.0" text="ID" />
+         <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
        <TableColumn fx:id="nameColumn" prefWidth="101.20001220703125" text="Name" />
-       <TableColumn fx:id="idColumn" minWidth="9.600006103515625" prefWidth="108.00001525878906" text="Price" />
+       <TableColumn fx:id="priceColumn" minWidth="9.600006103515625" prefWidth="108.00001525878906" text="Price" />
          <TableColumn fx:id="descriptionColumn" prefWidth="285.39996337890625" text="Description" />
      </columns>
    </TableView>
@@ -35,8 +35,8 @@
          </TextField>
          <HBox alignment="TOP_RIGHT" prefHeight="28.0" prefWidth="374.0">
             <children>
-               <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Edit" />
-               <Button mnemonicParsing="false" text="Save" />
+               <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#edit" text="Edit" />
+               <Button fx:id="saveBtn" mnemonicParsing="false" text="Save" visible="false" onAction="#editJokerInDb"/>
             </children>
          </HBox>
       </children>

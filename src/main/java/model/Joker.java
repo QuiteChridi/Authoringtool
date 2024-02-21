@@ -7,7 +7,7 @@ public class Joker {
 
     private String descriptionJoker;
 
-    public Joker(int cost, String name, int id, String description){
+    public Joker(int id, String name, int cost, String description){
         this.costJoker= cost;
         this.nameJoker= name;
         this.idJoker= id;

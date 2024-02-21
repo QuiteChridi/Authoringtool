@@ -3,6 +3,7 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,13 +30,16 @@ public class JokerController {
     @FXML
     private TableColumn<Joker, String> descriptionColumn;
     @FXML
-            private TextField idField;
+    private TextField idField;
     @FXML
-            private TextField nameField;
+    private TextField nameField;
     @FXML
-            private TextField priceField;
+    private TextField priceField;
     @FXML
-            private TextField descriptionField;
+    private TextField descriptionField;
+    @FXML
+    private Button saveBtn;
+
 
     ObservableList<Joker> jokerData= FXCollections.observableArrayList();
     Connection connection= Database.getInstance().conn;
@@ -76,11 +80,41 @@ public class JokerController {
 
     @FXML
     private void  select(){
+        saveBtn.setVisible(false);
         idField.setStyle("-fx-text-fill: black");
         currentSelectedJoker = jokerTable.getSelectionModel().getSelectedItem();
         nameField.setText(currentSelectedJoker.getNameJoker());
         idField.setText(String.valueOf(currentSelectedJoker.getIdJoker()));
         priceField.setText(String.valueOf(currentSelectedJoker.getCostJoker()));
         descriptionField.setText(currentSelectedJoker.getDescriptionJoker());
+    }
+    @FXML
+    private void edit(){
+        saveBtn.setVisible(true);
+        saveBtn.setStyle("-fx-text-fill: green");
+    }
+
+    @FXML
+    private void editJokerInDb(){
+        String query= "UPDATE joker SET name=?, price=?, description=? WHERE idjoker=?";
+        try{
+            PreparedStatement preparedStatement=connection.prepareStatement(query);
+            preparedStatement.setString(1,nameField.getText());
+            preparedStatement.setInt(2,Integer.parseInt(priceField.getText()));
+            preparedStatement.setString(3,descriptionField.getText());
+            preparedStatement.setInt(4,Integer.parseInt(idField.getText()));
+            preparedStatement.executeUpdate();
+
+            idField.setText("Updated");
+            idField.setStyle("-fx-text-fill: green");
+            nameField.clear();
+            descriptionField.clear();
+            priceField.clear();
+            loadJokerData();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
