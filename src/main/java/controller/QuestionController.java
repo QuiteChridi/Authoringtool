@@ -143,7 +143,7 @@ public class QuestionController {
         selectAllMenuItem.setOnAction(event -> {
             filterQuestionsByQuiz(0);
             quizCategory.setText("New Categorie");
-            categoryField.setText("");
+            categoryField.clear();
             categoryField.setEditable(true);
         }
         );
@@ -214,7 +214,7 @@ public class QuestionController {
             preparedStatement.executeUpdate();
             loadQuestionData();
 
-            categoryField.setText("New User!");
+            categoryField.setText("New Question added!");
             categoryField.setStyle("-fx-text-fill: green");
             saveBtn.setVisible(false);
             questionField.clear();

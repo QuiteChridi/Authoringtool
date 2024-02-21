@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JokerController">
+    <fx:include source="menuBar.fxml" />
+   <TableView fx:id="jokerTable" layoutY="27.0" prefHeight="488.0" prefWidth="585.0">
+     <columns>
+         <TableColumn fx:id="priceColumn" prefWidth="75.0" text="ID" />
+       <TableColumn fx:id="nameColumn" prefWidth="101.20001220703125" text="Name" />
+       <TableColumn fx:id="idColumn" minWidth="9.600006103515625" prefWidth="108.00001525878906" text="Price" />
+         <TableColumn fx:id="descriptionColumn" prefWidth="285.39996337890625" text="Description" />
+     </columns>
+   </TableView>
+
+</AnchorPane>

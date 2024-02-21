@@ -80,7 +80,6 @@ public class UserController {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
                  ResultSet resultSet = preparedStatement.executeQuery()) {
 
-
                 while (resultSet.next()) {
                     int userId = resultSet.getInt("iduser");
                     String username = resultSet.getString("name");
@@ -128,9 +127,9 @@ public class UserController {
         userTable.getSelectionModel().clearSelection();
         userID.setText("Entry Userdata");
         userID.setStyle("-fx-text-fill: black");
-        username.setText("");
-        email.setText("");
-        password.setText("");
+        username.clear();
+        password.clear();
+        email.clear();
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
         saveBtn.setText("Add");
@@ -164,6 +163,9 @@ public class UserController {
             loadUserData();
             userID.setText("Deleted");
             userID.setStyle("-fx-text-fill: red");
+            username.clear();
+            password.clear();
+            email.clear();
         } catch (SQLException e) {
             System.out.println("Catched aber nicht catched");
             userID.setText("No User Selected!");
@@ -187,6 +189,9 @@ public class UserController {
             userID.setText("User added");
             userID.setStyle("-fx-text-fill: green");
             saveBtn.setVisible(false);
+            username.clear();
+            password.clear();
+            email.clear();
         }
          catch (SQLException e) {
              userID.setText("Missing required Information!");
@@ -211,6 +216,9 @@ public class UserController {
             userID.setText("Data changed");
             userID.setStyle("-fx-text-fill: green");
             saveBtn.setVisible(false);
+            username.clear();
+            password.clear();
+            email.clear();
             loadUserData();
 
         } catch (SQLException e) {
@@ -230,7 +238,7 @@ public class UserController {
     }
 
     private void  resetUserTable(){
-        searchField.setText("");
+        searchField.clear();
         searchBtn.setText("Search");
         userTable.getItems().clear();
         loadUserData();
