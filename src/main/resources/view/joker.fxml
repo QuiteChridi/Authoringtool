@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JokerController">
     <fx:include source="menuBar.fxml" />
-   <TableView fx:id="jokerTable" layoutY="27.0" prefHeight="488.0" prefWidth="585.0">
+   <TableView fx:id="jokerTable" layoutY="27.0" onMouseClicked="#select" prefHeight="488.0" prefWidth="585.0">
      <columns>
          <TableColumn fx:id="priceColumn" prefWidth="75.0" text="ID" />
        <TableColumn fx:id="nameColumn" prefWidth="101.20001220703125" text="Name" />
@@ -13,5 +14,32 @@
          <TableColumn fx:id="descriptionColumn" prefWidth="285.39996337890625" text="Description" />
      </columns>
    </TableView>
+   <VBox alignment="TOP_RIGHT" layoutX="655.0" layoutY="27.0" prefHeight="214.0" prefWidth="291.0">
+      <children>
+         <TextField fx:id="idField" editable="false" promptText="ID">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></TextField>
+         <TextField fx:id="nameField" promptText="Name">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></TextField>
+         <TextField fx:id="priceField" promptText="Price">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></TextField>
+         <TextField fx:id="descriptionField" promptText="Description">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin>
+         </TextField>
+         <HBox alignment="TOP_RIGHT" prefHeight="28.0" prefWidth="374.0">
+            <children>
+               <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Edit" />
+               <Button mnemonicParsing="false" text="Save" />
+            </children>
+         </HBox>
+      </children>
+   </VBox>
 
 </AnchorPane>
