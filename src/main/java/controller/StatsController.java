@@ -1,18 +1,16 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import model.Database;
+import model.User;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -29,10 +27,8 @@ public class StatsController {
     private Label totalJokersLabel;
     @FXML
     private Label totalQuestionsLabel;
-
     @FXML
     private Label totalQuizzesLabel;
-
     @FXML
     private BarChart<String, Number> coinsHistogram;
     @FXML
@@ -47,26 +43,53 @@ public class StatsController {
     private ListView<String> usersListView;
     @FXML
     private TextField searchUserTextField;
+    @FXML
+    private ListView<String> selectedUsersListView;
 
     private ObservableList<String> allUsers = FXCollections.observableArrayList();
     private ObservableList<String> filteredUsers = FXCollections.observableArrayList();
-
-
-
-
+    private ObservableList<User> selectedUserReal = FXCollections.observableArrayList();
     Connection connection = Database.getInstance().conn;
 
     public void initialize() {
         updateUserCount();
-        //loadCoinsHistogram();
+        updateTotalJokers();
         updateTotalQuestions();
         updateTotalQuizzes();
+
         quizNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get("quizName").toString()));
         averageHighscoreColumn.setCellValueFactory(data -> new SimpleDoubleProperty((Double)data.getValue().get("averageHighscore")));
         loadQuizData();
-        updateTotalJokers();
+
+        selectedUserReal.addListener(this::onSelectedUsersChanged);
+
         usersListView.setItems(filteredUsers);
         loadAllUsers();
+    }
+
+    public void onSelectedUsersChanged(ListChangeListener.Change<? extends User> change) {
+        while (change.next()) {
+            if (change.wasAdded() || change.wasRemoved()) {
+                updateSelectedUsersTableView();
+            }
+        }
+    }
+
+    @FXML
+    private void removeUserFromSelectedUser() {
+        String selectedUsername = selectedUsersListView.getSelectionModel().getSelectedItem();
+        if (selectedUsername != null) {
+            User userToRemove = null;
+            for (User user : selectedUserReal) {
+                if (user.getUsername().equals(selectedUsername)) {
+                    userToRemove = user;
+                    break;
+                }
+            }
+            if (userToRemove != null) {
+                selectedUserReal.remove(userToRemove);
+            }
+        }
     }
 
     private void updateUserCount() {
@@ -177,13 +200,11 @@ public class StatsController {
             while (resultSet.next()) {
                 allUsers.add(resultSet.getString("name"));
             }
-            // Filter anwenden nach dem Laden aller Nutzer
             filterUsersList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void filterUsersList() {
@@ -194,15 +215,19 @@ public class StatsController {
         usersListView.refresh();
     }
 
+    private void updateSelectedUsersTableView(){
+        selectedUsersListView.getItems().clear();
+        for (User user : selectedUserReal) {
+            selectedUsersListView.getItems().add(user.getUsername());
+        }
+    }
 
     @FXML
     private void handleUserSelection() {
         String selectedUsername = usersListView.getSelectionModel().getSelectedItem();
         if (selectedUsername != null) {
             int userId = getUserIdByUsername(selectedUsername);
-            if (userId != -1) { // Angenommen, -1 bedeutet, dass keine gültige userId gefunden wurde
-                loadUserHighscores(userId);
-            }
+            selectedUserReal.add(getUserById(userId));
         }
     }
 
@@ -221,6 +246,25 @@ public class StatsController {
         return -1; // Rückgabe von -1, wenn keine userId gefunden wurde
     }
 
+    private User getUserById(int userId) {
+        String query = "SELECT * FROM user WHERE iduser = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("iduser");
+                String username = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int coins = resultSet.getInt("coins");
+
+                return new User(id, username, email, password, coins);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     private void loadUserHighscores(int userId) {
         userHighscoresHistogram.getData().clear();
@@ -248,7 +292,6 @@ public class StatsController {
                         resultSet.getInt("highscore")
                 ));
             }
-
             if (!hasData) {
                 // Es gibt keine Highscores, zeige das Label an und verstecke das Diagramm
                 noHighscoresLabel.setVisible(true);
