@@ -16,6 +16,9 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 
 public class StatsController {
 
@@ -228,9 +231,25 @@ public class StatsController {
         String selectedUsername = usersListView.getSelectionModel().getSelectedItem();
         if (selectedUsername != null) {
             int userId = getUserIdByUsername(selectedUsername);
-            selectedUserReal.add(getUserById(userId));
+            if (!selectedUserReal.contains(getUserById(userId))) {
+                selectedUserReal.add(getUserById(userId));
+            }else {
+                showAlreadyInListAlert();
+                System.out.println("sollte alert zeigen");
+            }
+
         }
     }
+
+    private void showAlreadyInListAlert() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText("Der Nutzer wurde bereits ausgewählt");
+
+        alert.showAndWait();
+    }
+
 
     private int getUserIdByUsername(String username) {
 
