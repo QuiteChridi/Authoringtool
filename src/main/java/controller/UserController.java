@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import model.AmountJoker;
 import model.Database;
 import model.User;
 
@@ -58,6 +59,13 @@ public class UserController {
     public TextField searchField;
     @FXML
     public TextField coins;
+    @FXML
+    public TextField doublePoints;
+    @FXML
+    public TextField timeStopTxt;
+    @FXML
+    public TextField fiftyFiftyTxt;
+
 
     public ObservableList<User> userData = FXCollections.observableArrayList();
 
@@ -123,6 +131,7 @@ public class UserController {
           email.setText(currentSelectedUser.getEmail());
           password.setText(currentSelectedUser.getPassword());
           coins.setText(String.valueOf(currentSelectedUser.getCoins()));
+          loadUserJoker(currentSelectedUser.getUserId());
       }
       catch (RuntimeException v){
           userID.setText("No User Selected!");
@@ -273,4 +282,36 @@ public class UserController {
         userTable.getItems().clear();
         userTable.getItems().addAll(users);
     }
+
+    private void loadUserJoker(int userId){
+        String query= "SELECT * FROM joker_of_users WHERE user_id=?";
+        try{
+            PreparedStatement preparedStatement= connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet= preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                do {
+                    int jokerId = resultSet.getInt("joker_id");
+                    int amount = resultSet.getInt("amount");
+                    AmountJoker amountJoker = new AmountJoker(userId, jokerId, amount);
+                   switch (amountJoker.getJokerIdId()){
+                       case 1 -> fiftyFiftyTxt.setText(String.valueOf(amountJoker.getAmount()));
+                       case 2 -> timeStopTxt.setText(String.valueOf(amountJoker.getAmount()));
+                       case 3 -> doublePoints.setText(String.valueOf(amountJoker.getAmount()));
+                   }
+                }
+                while(resultSet.next());
+            }
+            else{
+                fiftyFiftyTxt.setText("0");
+                timeStopTxt.setText("0");
+                doublePoints.setText("0");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
