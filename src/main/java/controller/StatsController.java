@@ -1,23 +1,24 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import model.Database;
+import model.User;
 
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 
 public class StatsController {
 
@@ -29,10 +30,8 @@ public class StatsController {
     private Label totalJokersLabel;
     @FXML
     private Label totalQuestionsLabel;
-
     @FXML
     private Label totalQuizzesLabel;
-
     @FXML
     private BarChart<String, Number> coinsHistogram;
     @FXML
@@ -47,26 +46,54 @@ public class StatsController {
     private ListView<String> usersListView;
     @FXML
     private TextField searchUserTextField;
+    @FXML
+    private ListView<String> selectedUsersListView;
 
     private ObservableList<String> allUsers = FXCollections.observableArrayList();
     private ObservableList<String> filteredUsers = FXCollections.observableArrayList();
-
-
-
-
+    private ObservableList<User> selectedUserReal = FXCollections.observableArrayList();
     Connection connection = Database.getInstance().conn;
 
     public void initialize() {
         updateUserCount();
-        //loadCoinsHistogram();
+        updateTotalJokers();
         updateTotalQuestions();
         updateTotalQuizzes();
+
         quizNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get("quizName").toString()));
         averageHighscoreColumn.setCellValueFactory(data -> new SimpleDoubleProperty((Double)data.getValue().get("averageHighscore")));
         loadQuizData();
-        updateTotalJokers();
+
+        selectedUserReal.addListener(this::onSelectedUsersChanged);
+
         usersListView.setItems(filteredUsers);
         loadAllUsers();
+    }
+
+    public void onSelectedUsersChanged(ListChangeListener.Change<? extends User> change) {
+        while (change.next()) {
+            if (change.wasAdded() || change.wasRemoved()) {
+                updateSelectedUsersTableView();
+                updateHistogram();
+            }
+        }
+    }
+
+    @FXML
+    private void removeUserFromSelectedUser() {
+        String selectedUsername = selectedUsersListView.getSelectionModel().getSelectedItem();
+        if (selectedUsername != null) {
+            User userToRemove = null;
+            for (User user : selectedUserReal) {
+                if (user.getUsername().equals(selectedUsername)) {
+                    userToRemove = user;
+                    break;
+                }
+            }
+            if (userToRemove != null) {
+                selectedUserReal.remove(userToRemove);
+            }
+        }
     }
 
     private void updateUserCount() {
@@ -177,13 +204,11 @@ public class StatsController {
             while (resultSet.next()) {
                 allUsers.add(resultSet.getString("name"));
             }
-            // Filter anwenden nach dem Laden aller Nutzer
             filterUsersList();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     @FXML
     private void filterUsersList() {
@@ -194,17 +219,37 @@ public class StatsController {
         usersListView.refresh();
     }
 
+    private void updateSelectedUsersTableView(){
+        selectedUsersListView.getItems().clear();
+        for (User user : selectedUserReal) {
+            selectedUsersListView.getItems().add(user.getUsername());
+        }
+    }
 
     @FXML
     private void handleUserSelection() {
         String selectedUsername = usersListView.getSelectionModel().getSelectedItem();
         if (selectedUsername != null) {
             int userId = getUserIdByUsername(selectedUsername);
-            if (userId != -1) { // Angenommen, -1 bedeutet, dass keine gültige userId gefunden wurde
-                loadUserHighscores(userId);
+            if (!selectedUserReal.contains(getUserById(userId))) {
+                selectedUserReal.add(getUserById(userId));
+            }else {
+                showAlreadyInListAlert();
+                System.out.println("sollte alert zeigen");
             }
+
         }
     }
+
+    private void showAlreadyInListAlert() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText("Der Nutzer wurde bereits ausgewählt");
+
+        alert.showAndWait();
+    }
+
 
     private int getUserIdByUsername(String username) {
 
@@ -221,47 +266,63 @@ public class StatsController {
         return -1; // Rückgabe von -1, wenn keine userId gefunden wurde
     }
 
+    private User getUserById(int userId) {
+        String query = "SELECT * FROM user WHERE iduser = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("iduser");
+                String username = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                int coins = resultSet.getInt("coins");
 
-    private void loadUserHighscores(int userId) {
-        userHighscoresHistogram.getData().clear();
+                return new User(id, username, email, password, coins);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        noHighscoresLabel.setVisible(false); // Verstecke das Label zunächst
-        userHighscoresHistogram.setVisible(true); // Stelle sicher, dass das Diagramm sichtbar ist
-
+    private ResultSet loadUserHighscores(User user) throws SQLException {
         String query = "SELECT quiz.name, highscores.highscore "
                 + "FROM highscores "
                 + "JOIN quiz ON highscores.quiz_idQuiz = quiz.idQuiz "
                 + "WHERE highscores.user_iduser = ? "
                 + "ORDER BY highscores.highscore DESC;";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, userId);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            XYChart.Series<String, Number> series = new XYChart.Series<>();
-
-            boolean hasData = false;
-            while (resultSet.next()) {
-                hasData = true; // Es gibt Highscores
-                series.getData().add(new XYChart.Data<>(
-                        resultSet.getString("name"),
-                        resultSet.getInt("highscore")
-                ));
-            }
-
-            if (!hasData) {
-                // Es gibt keine Highscores, zeige das Label an und verstecke das Diagramm
-                noHighscoresLabel.setVisible(true);
-                userHighscoresHistogram.setVisible(false);
-            } else {
-                // Es gibt Highscores, füge die Serie zum Diagramm hinzu und stelle sicher, dass das Diagramm sichtbar ist
-                userHighscoresHistogram.getData().add(series);
-                noHighscoresLabel.setVisible(false);
-                userHighscoresHistogram.setVisible(true);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, user.getUserId());
+        return preparedStatement.executeQuery();
     }
 
+    private void updateHistogram() {
+        userHighscoresHistogram.getData().clear();
+
+        for (User user : selectedUserReal) {
+            try {
+                ResultSet resultSet = loadUserHighscores(user);
+                XYChart.Series<String, Number> series = new XYChart.Series<>();
+                series.setName(user.getUsername());
+
+                boolean hasData = false;
+                while (resultSet.next()) {
+                    hasData = true;
+                    series.getData().add(new XYChart.Data<>(
+                            resultSet.getString("name"),
+                            resultSet.getInt("highscore")
+                    ));
+                }
+                if (hasData) {
+                    userHighscoresHistogram.getData().add(series);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        noHighscoresLabel.setVisible(userHighscoresHistogram.getData().isEmpty());
+        userHighscoresHistogram.setVisible(!userHighscoresHistogram.getData().isEmpty());
+    }
 }
