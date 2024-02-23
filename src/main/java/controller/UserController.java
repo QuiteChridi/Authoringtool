@@ -1,5 +1,6 @@
 package controller;
 
+import com.mysql.cj.xdevapi.UpdateResult;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -313,5 +314,54 @@ public class UserController {
         }
     }
 
+    @FXML
+    private void changeBtn(){
+        String query="SELECT * FROM joker_of_users WHERE user_id=?";
+        try{
+            PreparedStatement preparedStatement= connection.prepareStatement(query);
+            preparedStatement.setInt(1, currentSelectedUser.getUserId());
+            ResultSet resultSet= preparedStatement.executeQuery();
 
+            if(resultSet.next()){
+                    updateJokerAmount(currentSelectedUser.getUserId(),1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                    updateJokerAmount(currentSelectedUser.getUserId(),2, Integer.parseInt(timeStopTxt.getText()));
+                    updateJokerAmount(currentSelectedUser.getUserId(),3, Integer.parseInt(doublePoints.getText()));
+                }
+            else{
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),2, Integer.parseInt(timeStopTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),3, Integer.parseInt(doublePoints.getText()));
+                }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        loadUserJoker(currentSelectedUser.getUserId());
+    }
+
+    private void updateJokerAmount(int userId, int jokerId, int amount) {
+        String query = "UPDATE joker_of_users SET amount=? WHERE user_id=? AND joker_id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, amount);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.setInt(3, jokerId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void loadUserIntoAmountOfJoker(int userId,int jokerId, int amount){
+        String query="INSERT INTO joker_of_users(user_id, joker_id, amount)VALUES (?,?,?)";
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, jokerId);
+            preparedStatement.setInt(3, amount);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
