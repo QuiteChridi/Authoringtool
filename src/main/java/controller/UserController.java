@@ -317,21 +317,55 @@ public class UserController {
     @FXML
     private void changeBtn(){
         String query="SELECT * FROM joker_of_users WHERE user_id=?";
+        int counter=0;
         try{
             PreparedStatement preparedStatement= connection.prepareStatement(query);
             preparedStatement.setInt(1, currentSelectedUser.getUserId());
             ResultSet resultSet= preparedStatement.executeQuery();
 
             if(resultSet.next()){
-                    updateJokerAmount(currentSelectedUser.getUserId(),1, Integer.parseInt(fiftyFiftyTxt.getText()));
-                    updateJokerAmount(currentSelectedUser.getUserId(),2, Integer.parseInt(timeStopTxt.getText()));
-                    updateJokerAmount(currentSelectedUser.getUserId(),3, Integer.parseInt(doublePoints.getText()));
+                do{
+                    int jokerId=resultSet.getInt("joker_id");
+                    switch (jokerId) {
+                        case 1 -> {
+                            updateJokerAmount(currentSelectedUser.getUserId(), 1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                            counter += 2;
+                        }
+                        case 2 -> {
+                            updateJokerAmount(currentSelectedUser.getUserId(), 2, Integer.parseInt(timeStopTxt.getText()));
+                            counter += 3;
+                        }
+                        case 3 -> {
+                            updateJokerAmount(currentSelectedUser.getUserId(), 3, Integer.parseInt(doublePoints.getText()));
+                            counter += 4;
+                        }
+                    }
                 }
-            else{
-                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),1, Integer.parseInt(fiftyFiftyTxt.getText()));
-                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),2, Integer.parseInt(timeStopTxt.getText()));
-                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(),3, Integer.parseInt(doublePoints.getText()));
+                while (resultSet.next());
                 }
+            switch(counter){
+                case 2 -> {
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 2, Integer.parseInt(timeStopTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 3, Integer.parseInt(doublePoints.getText()));
+                }
+                case 3 ->{
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 3, Integer.parseInt(doublePoints.getText()));
+                }
+                case 4 ->{
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 2, Integer.parseInt(timeStopTxt.getText()));
+                }
+                case 5 -> loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 3, Integer.parseInt(doublePoints.getText()));
+                case 6-> loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 2, Integer.parseInt(timeStopTxt.getText()));
+                case 7-> loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                case 9-> System.out.println("eyyy");
+                default -> {
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 1, Integer.parseInt(fiftyFiftyTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 2, Integer.parseInt(timeStopTxt.getText()));
+                    loadUserIntoAmountOfJoker(currentSelectedUser.getUserId(), 3, Integer.parseInt(doublePoints.getText()));
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
