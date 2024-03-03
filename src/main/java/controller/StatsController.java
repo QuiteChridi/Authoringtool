@@ -104,12 +104,11 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int count = resultSet.getInt("count");
-                // Aktualisiere den Text des Labels, um die Anzahl der User anzuzeigen
-                userCountLabel.setText("Anzahl der User: " + count);
+                userCountLabel.setText("Number of Users: " + count);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            userCountLabel.setText("Fehler beim Laden der User-Anzahl");
+            userCountLabel.setText("Error loading the number of Users");
         }
     }
 
@@ -120,7 +119,7 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int totalJokers = resultSet.getInt("totalJokers");
-                totalJokersLabel.setText("Total number of Jokers: " + totalJokers);
+                totalJokersLabel.setText("Number of Jokers: " + totalJokers);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,11 +135,11 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int totalQuestions = resultSet.getInt("totalQuestions");
-                totalQuestionsLabel.setText("Gesamtanzahl der Fragen: " + totalQuestions);
+                totalQuestionsLabel.setText("Number of Questions: " + totalQuestions);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            totalQuestionsLabel.setText("Fehler beim Laden der Fragenanzahl");
+            totalQuestionsLabel.setText("Error loading the number of Questions");
         }
     }
 
@@ -151,11 +150,11 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int totalQuizzes = resultSet.getInt("totalQuizzes");
-                totalQuizzesLabel.setText("Gesamtanzahl der Quizzes: " + totalQuizzes);
+                totalQuizzesLabel.setText("Number of Quizzes: " + totalQuizzes);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            totalQuizzesLabel.setText("Fehler beim Laden der Quizanzahl");
+            totalQuizzesLabel.setText("Error loading the number of Quizzes");
         }
     }
 
@@ -206,7 +205,7 @@ public class StatsController {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Information");
         alert.setHeaderText(null);
-        alert.setContentText("Der Nutzer wurde bereits ausgewählt");
+        alert.setContentText("User has already been selected");
 
         alert.showAndWait();
     }
@@ -325,12 +324,12 @@ public class StatsController {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             for (int i = 0; i < 24; i++) {
-                series.getData().add(new XYChart.Data<>(String.format("%02d Uhr", i), 0));
+                series.getData().add(new XYChart.Data<>(String.format("%02d ", i), 0));
             }
             while (resultSet.next()) {
                 int hour = resultSet.getInt("hour");
                 int messageCount = resultSet.getInt("message_count");
-                series.getData().set(hour, new XYChart.Data<>(String.format("%02d Uhr", hour), messageCount));
+                series.getData().set(hour, new XYChart.Data<>(String.format("%02d", hour), messageCount));
             }
             lineChart.getData().clear();
             lineChart.getData().add(series);

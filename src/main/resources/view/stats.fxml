@@ -8,23 +8,23 @@
 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StatsController">
     <VBox>
     <VBox prefHeight="135.0" prefWidth="1036.0">
-        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Allgemeine Statistiken">
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="General Statistics">
             <padding>
                <Insets bottom="5.0" left="15.0" top="15.0" />
             </padding></Label>
-        <Label fx:id="userCountLabel" text="Gesamtanzahl der Nutzer: 0">
+        <Label fx:id="userCountLabel" text="Number of Users: 0">
         <padding>
             <Insets left="15.0" />
         </padding></Label>
-        <Label fx:id="totalJokersLabel" layoutX="20" layoutY="50" text="Gesamtanzahl der Joker: 0">
+        <Label fx:id="totalJokersLabel" layoutX="20" layoutY="50" text="Number of Jokers: 0">
             <padding>
                <Insets left="15.0" />
             </padding></Label>
-        <Label fx:id="totalQuestionsLabel" text="Gesamtanzahl der Fragen: 0">
+        <Label fx:id="totalQuestionsLabel" text="Number of Questions: 0">
             <padding>
                <Insets left="15.0" />
             </padding></Label>
-        <Label fx:id="totalQuizzesLabel" text="Gesamtanzahl der Quizzes: 0">
+        <Label fx:id="totalQuizzesLabel" text="Number of Quizzes: 0">
             <padding>
                <Insets left="15.0" />
             </padding></Label>
@@ -32,7 +32,7 @@
 
     </VBox>
         <VBox prefWidth="100.0">
-            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Highscores eines Nutzers">
+            <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Highscores of User">
                 <padding>
                     <Insets bottom="5.0" left="15.0" top="15.0" />
                 </padding>
@@ -42,7 +42,7 @@
                     <padding>
                         <Insets left="20.0" />
                     </padding>
-                    <TextField fx:id="searchUserTextField" onKeyReleased="#filterUsersList" promptText="Suche Nutzer...">
+                    <TextField fx:id="searchUserTextField" onKeyReleased="#filterUsersList" promptText="Search User...">
                   <VBox.margin>
                      <Insets bottom="3.0" />
                   </VBox.margin></TextField>
@@ -57,7 +57,7 @@
                 </VBox>
             <VBox prefHeight="174.0" prefWidth="158.0">
                <children>
-                  <Label text="Ausgewählte  Nutzer">
+                  <Label text="Selected  Users">
                      <VBox.margin>
                         <Insets left="20.0" />
                      </VBox.margin>
@@ -72,7 +72,7 @@
 
                 <StackPane fx:id="chartContainer">
 
-                <Label fx:id="noUserSelected" text="Wähle einen Nutzer um Highscores Anzuzeigen." visible="false" />
+                <Label fx:id="noUserSelected" text="Select a User to Display Highscores." visible="false" />
 
                 <BarChart fx:id="userHighscoresHistogram" legendVisible="true" prefHeight="230.0" prefWidth="602.0">
 
@@ -92,7 +92,7 @@
         </VBox>
 
     <VBox>
-        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Quiz Übersicht">
+        <Label style="-fx-font-size: 18; -fx-font-weight: bold;" text="Messages Overview">
             <VBox.margin>
                <Insets bottom="5.0" left="20.0" />
             </VBox.margin></Label>
@@ -106,10 +106,10 @@
             </DatePicker>
             <LineChart fx:id="lineChart" maxWidth="1.7976931348623157E308" prefHeight="208.0" prefWidth="724.0">
                 <xAxis>
-                    <CategoryAxis label="Stunde"/>
+                    <CategoryAxis label="Hour"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Anzahl der Nachrichten"/>
+                    <NumberAxis label="Number of Messages"/>
                 </yAxis>
             </LineChart>
         </HBox>
