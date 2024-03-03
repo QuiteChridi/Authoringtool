@@ -96,15 +96,22 @@
             <VBox.margin>
                <Insets bottom="5.0" left="20.0" />
             </VBox.margin></Label>
-        <TableView fx:id="quizTableView" nodeOrientation="LEFT_TO_RIGHT" prefHeight="13.0" prefWidth="1016.0">
-            <columns>
-                <TableColumn fx:id="quizNameColumn" prefWidth="132.20001411437988" text="Quiz Name" />
-                <TableColumn fx:id="averageHighscoreColumn" prefWidth="617.4000701904297" text="Durchschnittlicher Highscore" />
-            </columns>
-            <VBox.margin>
-               <Insets left="20.0" />
-            </VBox.margin>
-        </TableView>
+
     </VBox>
+        <HBox prefHeight="208.0" prefWidth="1036.0">
+            <DatePicker fx:id="datePicker" onAction="#handleDatePick">
+                <HBox.margin>
+                    <Insets left="15.0" top="15.0"/>
+                </HBox.margin>
+            </DatePicker>
+            <LineChart fx:id="lineChart" maxWidth="1.7976931348623157E308" prefHeight="208.0" prefWidth="724.0">
+                <xAxis>
+                    <CategoryAxis label="Stunde"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Anzahl der Nachrichten"/>
+                </yAxis>
+            </LineChart>
+        </HBox>
     </VBox>
 </ScrollPane>

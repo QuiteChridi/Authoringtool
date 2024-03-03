@@ -1,13 +1,12 @@
 package controller;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.util.Duration;
@@ -15,11 +14,14 @@ import model.Database;
 import model.User;
 
 import java.sql.*;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
+import javax.swing.*;
 
 
 public class StatsController {
@@ -35,12 +37,6 @@ public class StatsController {
     @FXML
     private Label totalQuizzesLabel;
     @FXML
-    private TableView<Map<String, Object>> quizTableView;
-    @FXML
-    private TableColumn<Map<String, Object>, String> quizNameColumn;
-    @FXML
-    private TableColumn<Map<String, Object>, Number> averageHighscoreColumn;
-    @FXML
     private BarChart<String, Number> userHighscoresHistogram;
     @FXML
     private ListView<String> usersListView;
@@ -48,6 +44,10 @@ public class StatsController {
     private TextField searchUserTextField;
     @FXML
     private ListView<String> selectedUsersListView;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private LineChart<String, Number> lineChart;
 
     private ObservableList<String> allUsers = FXCollections.observableArrayList();
     private ObservableList<String> filteredUsers = FXCollections.observableArrayList();
@@ -60,22 +60,23 @@ public class StatsController {
         updateTotalQuestions();
         updateTotalQuizzes();
 
-        quizNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().get("quizName").toString()));
-        averageHighscoreColumn.setCellValueFactory(data -> new SimpleDoubleProperty((Double)data.getValue().get("averageHighscore")));
-        loadQuizData();
-
         selectedUserReal.addListener(this::onSelectedUsersChanged);
 
         usersListView.setItems(filteredUsers);
         loadAllUsers();
-        updateHistogram();
+        updateHighscoreHistogram();
+
+        datePicker.setValue(LocalDate.now());
+        updateMessagesChart(LocalDate.now());
+
+
     }
 
     public void onSelectedUsersChanged(ListChangeListener.Change<? extends User> change) {
         while (change.next()) {
             if (change.wasAdded() || change.wasRemoved()) {
                 updateSelectedUsersTableView();
-                updateHistogram();
+                updateHighscoreHistogram();
             }
         }
     }
@@ -109,26 +110,6 @@ public class StatsController {
         } catch (SQLException e) {
             e.printStackTrace();
             userCountLabel.setText("Fehler beim Laden der User-Anzahl");
-        }
-    }
-
-    private void loadQuizData() {
-
-        ObservableList<Map<String, Object>> quizData = FXCollections.observableArrayList();
-        String query = "SELECT q.name, AVG(h.highscore) AS averageHighscore FROM quiz q LEFT JOIN highscores h ON q.idQuiz = h.quiz_idQuiz GROUP BY q.name ORDER BY q.name;";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("quizName", rs.getString("name"));
-                row.put("averageHighscore", rs.getDouble("averageHighscore"));
-                quizData.add(row);
-            }
-            quizTableView.setItems(quizData);
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -215,7 +196,6 @@ public class StatsController {
                 selectedUserReal.add(getUserById(userId));
             }else {
                 showAlreadyInListAlert();
-                System.out.println("sollte alert zeigen");
             }
 
         }
@@ -277,7 +257,7 @@ public class StatsController {
         return preparedStatement.executeQuery();
     }
 
-    private void updateHistogram() {
+    private void updateHighscoreHistogram() {
 
         userHighscoresHistogram.setAnimated(false);
         userHighscoresHistogram.getData().clear();
@@ -318,5 +298,46 @@ public class StatsController {
             Tooltip.install(node, tooltip);
         }
     }
+
+    @FXML
+    private void handleDatePick() {
+        LocalDate date = datePicker.getValue();
+        updateMessagesChart(date);
+    }
+
+    private void updateMessagesChart(LocalDate date) {
+        lineChart.setAnimated(false);
+        String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        String query = "SELECT EXTRACT(HOUR FROM timestamp) AS hour, COUNT(*) AS message_count "
+                + "FROM messages "
+                + "WHERE DATE(timestamp) = ? "
+                + "GROUP BY hour "
+                + "ORDER BY hour;";
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Nachrichten am " + formattedDate);
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, formattedDate);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            for (int i = 0; i < 24; i++) {
+                series.getData().add(new XYChart.Data<>(String.format("%02d Uhr", i), 0));
+            }
+            while (resultSet.next()) {
+                int hour = resultSet.getInt("hour");
+                int messageCount = resultSet.getInt("message_count");
+                series.getData().set(hour, new XYChart.Data<>(String.format("%02d Uhr", hour), messageCount));
+            }
+            lineChart.getData().clear();
+            lineChart.getData().add(series);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
