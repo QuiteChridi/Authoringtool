@@ -23,7 +23,7 @@ import javafx.scene.control.Alert.AlertType;
 public class StatsController {
 
     @FXML
-    private Label noHighscoresLabel;
+    private Label noUserSelected;
     @FXML
     private Label userCountLabel;
     @FXML
@@ -68,6 +68,7 @@ public class StatsController {
 
         usersListView.setItems(filteredUsers);
         loadAllUsers();
+        updateHistogram();
     }
 
     public void onSelectedUsersChanged(ListChangeListener.Change<? extends User> change) {
@@ -299,6 +300,8 @@ public class StatsController {
     }
 
     private void updateHistogram() {
+
+        userHighscoresHistogram.setAnimated(false);
         userHighscoresHistogram.getData().clear();
 
         for (User user : selectedUserReal) {
@@ -322,7 +325,7 @@ public class StatsController {
                 e.printStackTrace();
             }
         }
-        noHighscoresLabel.setVisible(userHighscoresHistogram.getData().isEmpty());
-        userHighscoresHistogram.setVisible(!userHighscoresHistogram.getData().isEmpty());
+        noUserSelected.setVisible(selectedUserReal.isEmpty());
+        userHighscoresHistogram.setVisible(!selectedUserReal.isEmpty());
     }
 }

@@ -73,7 +73,7 @@
 
                 <StackPane fx:id="chartContainer">
 
-                <Label fx:id="noHighscoresLabel" text="Dieser Benutzer hat keine Highscores." visible="false" />
+                <Label fx:id="noUserSelected" text="Wähle einen Nutzer um Highscores Anzuzeigen." visible="false" />
 
                 <BarChart fx:id="userHighscoresHistogram" legendVisible="true" prefHeight="230.0" prefWidth="602.0">
 
