@@ -6,9 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 import model.Database;
 import model.User;
 
@@ -32,8 +34,6 @@ public class StatsController {
     private Label totalQuestionsLabel;
     @FXML
     private Label totalQuizzesLabel;
-    @FXML
-    private BarChart<String, Number> coinsHistogram;
     @FXML
     private TableView<Map<String, Object>> quizTableView;
     @FXML
@@ -109,27 +109,6 @@ public class StatsController {
         } catch (SQLException e) {
             e.printStackTrace();
             userCountLabel.setText("Fehler beim Laden der User-Anzahl");
-        }
-    }
-
-    private void loadCoinsHistogram() {
-        String query = "SELECT name, coins FROM user ORDER BY coins DESC";
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Coins");
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                String username = resultSet.getString("name");
-                int coins = resultSet.getInt("coins");
-                if (coins > 0) {
-                    series.getData().add(new XYChart.Data<>(username, coins));
-                }
-            }
-            if (!series.getData().isEmpty()) {
-                coinsHistogram.getData().add(series);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -251,7 +230,6 @@ public class StatsController {
         alert.showAndWait();
     }
 
-
     private int getUserIdByUsername(String username) {
 
         String query = "SELECT iduser FROM user WHERE name = ?";
@@ -320,6 +298,8 @@ public class StatsController {
                 }
                 if (hasData) {
                     userHighscoresHistogram.getData().add(series);
+                    addTooltipToBarChartSeries(series);
+
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -328,4 +308,15 @@ public class StatsController {
         noUserSelected.setVisible(selectedUserReal.isEmpty());
         userHighscoresHistogram.setVisible(!selectedUserReal.isEmpty());
     }
+
+    private void addTooltipToBarChartSeries(XYChart.Series<String, Number> series) {
+        for (XYChart.Data<String, Number> data : series.getData()) {
+            Tooltip tooltip = new Tooltip();
+            tooltip.setText(data.getYValue().toString());
+            tooltip.setShowDelay(Duration.seconds(0.25));
+            Node node = data.getNode();
+            Tooltip.install(node, tooltip);
+        }
+    }
+
 }
