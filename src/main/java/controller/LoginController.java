@@ -3,10 +3,12 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Database;
 
@@ -39,6 +41,7 @@ public class LoginController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("/view/main.fxml"));
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
+                stage.setMaximized(true);
                 stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
