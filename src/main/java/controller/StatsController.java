@@ -114,19 +114,20 @@ public class StatsController {
     }
 
     private void updateTotalJokers() {
-        String query = "SELECT SUM(fifty_fifty_joker + double_points_joker + pause_joker) AS totalJokers FROM user";
+        String query = "SELECT SUM(amount) AS totalJokers FROM joker_of_users";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 int totalJokers = resultSet.getInt("totalJokers");
-                totalJokersLabel.setText("Gesamtanzahl der Joker: " + totalJokers);
+                totalJokersLabel.setText("Total number of Jokers: " + totalJokers);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            totalJokersLabel.setText("Fehler beim Laden der Joker-Anzahl");
+            totalJokersLabel.setText("Error loading the number of Jokers");
         }
     }
+
 
     private void updateTotalQuestions() {
         String query = "SELECT COUNT(*) AS totalQuestions FROM questions";
