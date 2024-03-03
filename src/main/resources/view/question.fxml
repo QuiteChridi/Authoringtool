@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.QuestionController">
-    <fx:include source="menuBar.fxml" />
      <TableView fx:id="questionTable" layoutY="26.0" prefHeight="690.0" prefWidth="709.0" onMouseClicked="#select">
          <columns>
              <TableColumn fx:id="quizIdColumn" minWidth="48.20001143217087" prefWidth="48.20001143217087" text="Quiz ID" />
