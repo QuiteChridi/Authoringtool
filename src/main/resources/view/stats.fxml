@@ -46,7 +46,7 @@
                   <VBox.margin>
                      <Insets bottom="3.0" />
                   </VBox.margin></TextField>
-                    <ListView fx:id="usersListView" minHeight="-Infinity" onMouseClicked="#handleUserSelection" prefHeight="125.0" prefWidth="156.0">
+                    <ListView fx:id="usersListView" minHeight="-Infinity" onMouseClicked="#handleUserSelection" prefHeight="169.0" prefWidth="156.0">
                         <opaqueInsets>
                             <Insets left="20.0" />
                         </opaqueInsets>
@@ -57,11 +57,6 @@
                 </VBox>
             <VBox prefHeight="174.0" prefWidth="158.0">
                <children>
-                  <Label text="Selected  Users">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
                   <ListView fx:id="selectedUsersListView" onMouseClicked="#removeUserFromSelectedUser" prefHeight="200.0" prefWidth="200.0">
                      <VBox.margin>
                         <Insets bottom="20.0" left="20.0" />
@@ -98,18 +93,18 @@
             </VBox.margin></Label>
 
     </VBox>
-        <HBox prefHeight="208.0" prefWidth="1036.0">
+        <HBox prefHeight="240.0" prefWidth="1036.0">
             <DatePicker fx:id="datePicker" onAction="#handleDatePick">
                 <HBox.margin>
-                    <Insets left="15.0" top="15.0"/>
+                    <Insets left="15.0" top="15.0" />
                 </HBox.margin>
             </DatePicker>
-            <LineChart fx:id="lineChart" maxWidth="1.7976931348623157E308" prefHeight="208.0" prefWidth="724.0">
+            <LineChart fx:id="lineChart" maxWidth="1.7976931348623157E308" prefHeight="281.0" prefWidth="724.0">
                 <xAxis>
-                    <CategoryAxis label="Hour"/>
+                    <CategoryAxis label="Hour" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Number of Messages"/>
+                    <NumberAxis label="Number of Messages" />
                 </yAxis>
             </LineChart>
         </HBox>

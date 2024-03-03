@@ -316,7 +316,7 @@ public class StatsController {
                 + "ORDER BY hour;";
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Nachrichten am " + formattedDate);
+        series.setName("Messages on " + formattedDate);
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -328,8 +328,9 @@ public class StatsController {
             }
             while (resultSet.next()) {
                 int hour = resultSet.getInt("hour");
+                System.out.println(hour);
                 int messageCount = resultSet.getInt("message_count");
-                series.getData().set(hour, new XYChart.Data<>(String.format("%02d", hour), messageCount));
+                series.getData().set(hour, new XYChart.Data<>(String.format("%02d", hour+1), messageCount));
             }
             lineChart.getData().clear();
             lineChart.getData().add(series);
@@ -338,6 +339,4 @@ public class StatsController {
             e.printStackTrace();
         }
     }
-
-
 }
