@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="715.0" prefWidth="1037.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JokerController">
-   <TableView fx:id="jokerTable" layoutY="27.0" onMouseClicked="#select" prefHeight="488.0" prefWidth="585.0">
+   <TableView fx:id="jokerTable" layoutY="27.0" onMouseClicked="#select" prefHeight="688.0" prefWidth="626.0">
      <columns>
          <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
        <TableColumn fx:id="nameColumn" prefWidth="101.20001220703125" text="Name" />
@@ -13,9 +13,9 @@
          <TableColumn fx:id="descriptionColumn" prefWidth="285.39996337890625" text="Description" />
      </columns>
    </TableView>
-   <VBox alignment="TOP_RIGHT" layoutX="655.0" layoutY="27.0" prefHeight="214.0" prefWidth="291.0">
+   <VBox alignment="TOP_RIGHT" layoutX="655.0" layoutY="27.0" prefHeight="176.0" prefWidth="292.0">
       <children>
-         <TextField fx:id="idField" editable="false" promptText="ID">
+         <TextField fx:id="idField" editable="false" prefHeight="26.0" prefWidth="198.0" promptText="ID">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin></TextField>
@@ -32,13 +32,17 @@
                <Insets bottom="20.0" />
             </VBox.margin>
          </TextField>
-         <HBox alignment="TOP_RIGHT" prefHeight="28.0" prefWidth="374.0">
-            <children>
-               <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#edit" text="Edit" />
-               <Button fx:id="saveBtn" mnemonicParsing="false" text="Save" visible="false" onAction="#editJokerInDb"/>
-            </children>
-         </HBox>
       </children>
    </VBox>
+   <HBox alignment="TOP_RIGHT" layoutX="747.0" layoutY="195.0" prefHeight="28.0" prefWidth="255.0">
+      <children>
+         <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#edit" text="Edit">
+            <HBox.margin>
+               <Insets right="15.0" />
+            </HBox.margin>
+         </Button>
+         <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#editJokerInDb" text="Save" visible="false" />
+      </children>
+   </HBox>
 
 </AnchorPane>
