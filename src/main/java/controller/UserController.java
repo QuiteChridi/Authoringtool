@@ -90,6 +90,7 @@ public class UserController {
     }
 
     private void loadUserData() {
+        userData.clear();
         try {
             String query = "SELECT * FROM user";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query);
