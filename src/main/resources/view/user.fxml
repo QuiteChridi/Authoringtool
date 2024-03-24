@@ -32,7 +32,7 @@
       </children>
    </HBox>
 
-   <VBox layoutX="715.0" layoutY="109.0" prefHeight="235.0" prefWidth="251.0">
+   <VBox fx:id="vBox" layoutX="715.0" layoutY="109.0" prefHeight="235.0" prefWidth="251.0">
       <children>
          <HBox prefHeight="55.0" prefWidth="251.0">
             <children>

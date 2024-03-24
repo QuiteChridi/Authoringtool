@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import model.AmountJoker;
 import model.Database;
 import model.User;
@@ -66,6 +67,8 @@ public class UserController {
     public TextField timeStopTxt;
     @FXML
     public TextField fiftyFiftyTxt;
+    @FXML
+    public VBox vBox;
 
 
     public ObservableList<User> userData = FXCollections.observableArrayList();
@@ -83,6 +86,8 @@ public class UserController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         coinsColumn.setCellValueFactory(new PropertyValueFactory<>("coins"));
+
+        vBox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         userTable.setFocusTraversable(false);
         loadUserData();
@@ -136,8 +141,7 @@ public class UserController {
           loadUserJoker(currentSelectedUser.getUserId());
       }
       catch (RuntimeException v){
-          userID.setText("No User Selected!");
-          userID.setStyle("-fx-text-fill: red");
+
       }
     }
 
@@ -150,6 +154,9 @@ public class UserController {
         password.clear();
         email.clear();
         coins.clear();
+        fiftyFiftyTxt.clear();
+        timeStopTxt.clear();
+        doublePoints.clear();
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
         saveBtn.setText("Add");
@@ -174,6 +181,12 @@ public class UserController {
 
     @FXML
     private void delete(){
+        if(userInMessages(currentSelectedUser.getUserId())){
+            deleteUserInMessages();
+        }
+        if(userInJokerTable(currentSelectedUser.getUserId())){
+            deleteUserIdInJoker();
+        }
         saveBtn.setVisible(false);
         String query= "DELETE FROM user WHERE  iduser=?";
         try{
@@ -188,8 +201,9 @@ public class UserController {
             email.clear();
             coins.clear();
         } catch (SQLException e) {
-            System.out.println("Catched aber nicht catched");
-            userID.setText("No User Selected!");
+            System.err.println("SQL-Fehler: " + e.getMessage());
+            e.printStackTrace();
+            userID.setText("SQL-Fehler: " + e.getMessage());
             userID.setStyle("-fx-text-fill: red");
         } catch (RuntimeException r){
             userID.setText("No User Selected!");
@@ -399,4 +413,67 @@ public class UserController {
             throw new RuntimeException(e);
         }
     }
+    private void deleteUserIdInJoker(){
+        String query = "DELETE FROM joker_of_users WHERE user_id=?";
+        try{
+            PreparedStatement preparedStatement= connection.prepareStatement(query);
+            preparedStatement.setInt(1, currentSelectedUser.getUserId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Problem in deleteUSerIdinJoker");
+            throw new RuntimeException(e);
+        }
+    }
+    private boolean userInJokerTable(int userId) {
+        String query = "SELECT COUNT(*) AS count FROM joker_of_users WHERE user_id=?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            showAlert("Fehler beim Überprüfen des Benutzers in der Joker-Tabelle.");
+        }
+
+        return false;
+    }
+    private boolean userInMessages(int userId) {
+        String query = "SELECT COUNT(*) AS count FROM messages WHERE sender_id=? OR receiver_id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            showAlert("Fehler beim Überprüfen des Benutzers in der Message-Tabelle.");
+        }
+
+        return false;
+    }
+
+    private void deleteUserInMessages() {
+        String query = "DELETE FROM messages WHERE sender_id=? OR receiver_id=?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, currentSelectedUser.getUserId());
+            preparedStatement.setInt(2, currentSelectedUser.getUserId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Problem in deleteUserInMessage");
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
