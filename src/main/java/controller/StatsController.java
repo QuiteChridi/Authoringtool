@@ -330,7 +330,8 @@ public class StatsController {
                 int hour = resultSet.getInt("hour");
                 System.out.println(hour);
                 int messageCount = resultSet.getInt("message_count");
-                series.getData().set(hour, new XYChart.Data<>(String.format("%02d", hour+1), messageCount));
+                hour = (hour + 1) % 24;
+                series.getData().set(hour, new XYChart.Data<>(String.format("%02d", hour), messageCount));
             }
             lineChart.getData().clear();
             lineChart.getData().add(series);
