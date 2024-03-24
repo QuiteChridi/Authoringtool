@@ -142,9 +142,16 @@ public class QuestionController {
         MenuItem selectAllMenuItem = new MenuItem("New Categorie");
         selectAllMenuItem.setOnAction(event -> {
             filterQuestionsByQuiz(0);
+            currentSelectedQuestion=null;
             quizCategory.setText("New Categorie");
-            categoryField.clear();
             categoryField.setEditable(true);
+            categoryField.clear();
+            questionField.clear();
+            correctField.clear();
+            wrong1Field.clear();
+            wrong2Field.clear();
+            wrong3Field.clear();
+            selectedQuizId=0;
         }
         );
         quizCategory.getItems().add(selectAllMenuItem);
@@ -224,6 +231,7 @@ public class QuestionController {
             wrong3Field.clear();
 
         } catch (SQLException e) {
+            System.err.println("SQL-Fehler: " + e.getMessage());
             System.out.println("new Question Problem");
         }
     }
@@ -285,10 +293,11 @@ public class QuestionController {
     }
 
     @FXML
-    private void  select(){
-            categoryField.setStyle("-fx-text-fill: black");
-            currentSelectedQuestion = questionTable.getSelectionModel().getSelectedItem();
-            selectedQuizId=currentSelectedQuestion.getQuizId();
+    private void select() {
+        categoryField.setStyle("-fx-text-fill: black");
+        currentSelectedQuestion = questionTable.getSelectionModel().getSelectedItem();
+        if (currentSelectedQuestion != null) {
+            selectedQuizId = currentSelectedQuestion.getQuizId();
             selectQuiz();
             categoryField.setText(selectedQuiz.getQuizName());
             questionField.setText(currentSelectedQuestion.getQuestion());
@@ -296,7 +305,17 @@ public class QuestionController {
             wrong1Field.setText(currentSelectedQuestion.getWrongAnswer1());
             wrong2Field.setText(currentSelectedQuestion.getWrongAnswer2());
             wrong3Field.setText(currentSelectedQuestion.getWrongAnswer3());
-            primaryQuestion=currentSelectedQuestion.getQuestion();
+            primaryQuestion = currentSelectedQuestion.getQuestion();
+        } else {
+            categoryField.setText("");
+            questionField.setText("");
+            correctField.setText("");
+            wrong1Field.setText("");
+            wrong2Field.setText("");
+            wrong3Field.setText("");
+            primaryQuestion = "";
+            selectedQuizId = 0;
+        }
     }
 
     @FXML
@@ -354,6 +373,11 @@ public class QuestionController {
         saveBtn.setVisible(true);
         saveBtn.setText("Add");
         saveBtn.setStyle("-fx-text-fill: green");
+        questionField.clear();
+        correctField.clear();
+        wrong1Field.clear();
+        wrong2Field.clear();
+        wrong3Field.clear();
     }
 
     private int getNewestQuizId(){
@@ -374,4 +398,5 @@ public class QuestionController {
         }
 
     }
+
 }

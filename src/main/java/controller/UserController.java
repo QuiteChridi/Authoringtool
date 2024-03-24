@@ -461,7 +461,6 @@ public class UserController {
 
         return false;
     }
-
     private void deleteUserInMessages() {
         String query = "DELETE FROM messages WHERE sender_id=? OR receiver_id=?";
         try {
