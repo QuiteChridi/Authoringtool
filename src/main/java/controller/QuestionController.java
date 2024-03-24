@@ -370,6 +370,7 @@ public class QuestionController {
     private void newQuestion(){
         categoryField.setStyle("-fx-text-fill: black");
         questionTable.getSelectionModel().clearSelection();
+        currentSelectedQuestion=null;
         saveBtn.setVisible(true);
         saveBtn.setText("Add");
         saveBtn.setStyle("-fx-text-fill: green");
