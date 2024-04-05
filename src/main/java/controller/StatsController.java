@@ -99,7 +99,7 @@ public class StatsController {
     }
 
     private void updateUserCount() {
-        String query = "SELECT COUNT(*) AS count FROM user";
+        String query = "SELECT COUNT(*) AS count FROM \"user\"";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -159,7 +159,7 @@ public class StatsController {
     }
 
     private void loadAllUsers() {
-        String query = "SELECT name FROM user";
+        String query = "SELECT name FROM \"user\"";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -212,7 +212,7 @@ public class StatsController {
 
     private int getUserIdByUsername(String username) {
 
-        String query = "SELECT iduser FROM user WHERE name = ?";
+        String query = "SELECT iduser FROM \"user\" WHERE name = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -226,7 +226,7 @@ public class StatsController {
     }
 
     private User getUserById(int userId) {
-        String query = "SELECT * FROM user WHERE iduser = ?";
+        String query = "SELECT * FROM \"user\" WHERE iduser = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -309,11 +309,11 @@ public class StatsController {
         lineChart.setAnimated(false);
         String formattedDate = date.format(DateTimeFormatter.ISO_LOCAL_DATE);
 
-        String query = "SELECT EXTRACT(HOUR FROM timestamp) AS hour, COUNT(*) AS message_count "
+        String query = "SELECT EXTRACT(HOUR FROM timestamp) AS \"hour\", COUNT(*) AS message_count "
                 + "FROM messages "
                 + "WHERE DATE(timestamp) = ? "
-                + "GROUP BY hour "
-                + "ORDER BY hour;";
+                + "GROUP BY \"hour\" "
+                + "ORDER BY \"hour\";";
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Messages on " + formattedDate);

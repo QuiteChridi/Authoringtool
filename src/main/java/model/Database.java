@@ -28,6 +28,7 @@ public class Database {
      * @return true if connection is established.
      */
     public boolean connect() {
+
         String url = "jdbc:mysql://";
         url += host.get();
         url += "/";
@@ -36,6 +37,33 @@ public class Database {
 
         try {
             conn = DriverManager.getConnection(url, username.get(), password.get());
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public void run() {
+                    try {
+                        Connection conn = Database.getInstance().conn;
+                        if(conn != null){
+                            conn.close();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Connects the user to the inMemory Database.
+     * @return true if connection is established.
+     */
+    public boolean connectInMemory() {
+        try {
+            conn = DriverManager.getConnection("jdbc:h2:mem:inMemory;DB_CLOSE_DELAY=-1;MODE=MYSQL;INIT=RUNSCRIPT FROM 'D:/02_Datenspeicher/Gitlab/authoringtool/src/main/resources/database/setup.sql';", "sa", "sa");
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                     try {

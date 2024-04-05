@@ -9,3 +9,7 @@ libraryDependencies += "org.openjfx" % "javafx-controls" % "11.0.2"
 libraryDependencies += "org.openjfx" % "javafx-fxml" % "11.0.2"
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.23"
+
+libraryDependencies += "com.h2database" % "h2" % "2.2.224"
+
+

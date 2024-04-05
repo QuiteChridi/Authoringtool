@@ -34,7 +34,7 @@ public class LoginController implements Initializable {
      */
     @FXML
     private void login() {
-        boolean connected = Database.getInstance().connect();
+        boolean connected = Database.getInstance().connectInMemory();
         if (connected) {
             try {
                 Stage stage = (Stage) host.getScene().getWindow();

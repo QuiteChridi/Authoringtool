@@ -73,7 +73,7 @@ public class UserController {
 
     public ObservableList<User> userData = FXCollections.observableArrayList();
 
-    User currentSelectedUser;
+    User currentSelectedUser = null;
 
     Connection connection = Database.getInstance().conn;
 
@@ -97,8 +97,7 @@ public class UserController {
     private void loadUserData() {
         userData.clear();
         try {
-            String query = "SELECT * FROM user";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM \"user\"");
                  ResultSet resultSet = preparedStatement.executeQuery()) {
 
                 while (resultSet.next()) {
@@ -160,6 +159,7 @@ public class UserController {
         saveBtn.setVisible(true);
         saveBtn.setStyle("-fx-text-fill: green");
         saveBtn.setText("Add");
+        currentSelectedUser = null;
     }
 
     @FXML
@@ -188,7 +188,7 @@ public class UserController {
             deleteUserIdInJoker();
         }
         saveBtn.setVisible(false);
-        String query= "DELETE FROM user WHERE  iduser=?";
+        String query= "DELETE FROM \"user\" WHERE  iduser=?";
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Integer.parseInt(userID.getText()));
@@ -213,7 +213,7 @@ public class UserController {
     }
 
     private void createUser(){
-        String query= "INSERT INTO user (name, password, email,coins) VALUES (?, ?, ?,?)";
+        String query= "INSERT INTO \"user\" (name, password, email,coins) VALUES (?, ?, ?,?)";
         try{
             PreparedStatement preparedStatement =connection.prepareStatement(query);
             preparedStatement.setString(1,username.getText());
@@ -236,7 +236,7 @@ public class UserController {
     }
 
     private void editUserInDb() {
-        String query = "UPDATE user SET name=?, email=?, password=?, coins=? WHERE iduser = ?";
+        String query = "UPDATE \"user\" SET name=?, email=?, password=?, coins=? WHERE iduser = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username.getText());
